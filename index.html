@@ -1,273 +1,55 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>L’Avent magique de l’EDM</title>
-<style>
-  :root{--red:#a41616;--cream:#fff2db;--white:#ffffff;}
-  body{
-    margin:0;
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
-    background: linear-gradient(#f5f7fa,#eef6f9);
-    color: #222;
-    text-align:center;
-  }
-  h1{color:var(--red); margin:24px 0; font-size:2rem;}
-  #calendar{
-    max-width:980px;
-    margin:0 auto 24px;
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:12px;
-    padding:0 12px;
-    z-index:2;
-    position:relative;
-  }
 
-  /* card container */
-  .door{
-    position:relative;
-    height:120px;
-    border-radius:10px;
-    perspective:900px;
-    cursor:pointer;
-    transform-style:preserve-3d;
-  }
+  <script>
+const calendrier = document.getElementById("calendrier");
+const modeTest = false; // mets true si tu veux tester avant décembre
+const aujourdHui = modeTest ? new Date(2024, 11, 8) : new Date();
+const currentDay = aujourdHui.getDate();
 
-  /* two faces */
-  .face{
-    position:absolute;
-    inset:0;
-    border-radius:10px;
-    backface-visibility:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    padding:8px;
-    box-sizing:border-box;
-    transition: transform .6s ease, box-shadow .3s ease;
-  }
+const messages = {
+  1: "Karima : Belle ouverture du calendrier !",
+  2: "Laure : Nous te remercions sincèrement pour ta collaboration",
+  3: "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité",
+  4: "Ambiance douce et chaleureuse 🎄",
+  5: "Un petit sourire pour illuminer ta journée ! ✨",
+  // ... ajoute tes autres jours ici ...
+  24: "Toute l’équipe EDM : Bravo pour cette belle année ensemble 💫"
+};
 
-  .face.front{
-    background:var(--red);
-    color:var(--white);
-    transform:rotateY(0deg);
-    font-weight:700;
-    font-size:1.4rem;
-  }
+for (let jour = 1; jour <= 24; jour++) {
+  const porte = document.createElement("div");
+  porte.classList.add("porte");
 
-  .face.back{
-    background:var(--cream);
-    color:var(--red);
-    transform:rotateY(180deg); /* hidden until card flips */
-    text-align:center;
-    font-size:0.95rem;
-    line-height:1.2;
-    padding:12px;
-  }
+  const numero = document.createElement("div");
+  numero.classList.add("porte-numero");
+  numero.textContent = jour;
 
-  /* open state rotates whole .door so back faces front */
-  .door.open{
-    transform: rotateY(180deg);
-    box-shadow:0 8px 24px rgba(0,0,0,0.12);
-    animation: sparkle 1.6s infinite;
-  }
+  const contenu = document.createElement("div");
+  contenu.classList.add("porte-contenu");
+  contenu.textContent = messages[jour] || "";
 
-  /* ensure text stays readable (not inverted) */
-  .door.open .face.front { transform: rotateY(180deg); }
-  .door.open .face.back  { transform: rotateY(0deg); }
+  porte.appendChild(numero);
+  porte.appendChild(contenu);
+  calendrier.appendChild(porte);
 
-  /* hover */
-  .door:hover .face.front{ box-shadow:0 6px 20px rgba(0,0,0,0.12); transform: scale(1.02); }
-
-  @keyframes sparkle{
-    0%{ box-shadow: 0 0 6px 2px rgba(255,215,0,0.6); }
-    50%{ box-shadow: 0 0 18px 6px rgba(255,215,0,0.85); }
-    100%{ box-shadow: 0 0 6px 2px rgba(255,215,0,0.6); }
-  }
-
-  /* responsive */
-  @media (max-width:800px){
-    #calendar{grid-template-columns:repeat(4,1fr);}
-    .door{height:100px;}
-  }
-  @media (max-width:420px){
-    #calendar{grid-template-columns:repeat(3,1fr); gap:8px;}
-    .door{height:88px;}
-  }
-
-  /* canvas (snow) under everything */
-  canvas.snow{ position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:0; }
-  /* keep content above */
-  header, #calendar { position:relative; z-index:2; }
-  footer{ color:#666; margin-bottom:20px; }
-</style>
-</head>
-<body>
-<header>
-  <h1>🎄 L’Avent magique de l’EDM</h1>
-</header>
-
-<div id="calendar" aria-live="polite"></div>
-<footer id="page-footer">Calendrier de l’Avent — EDM</footer>
-
-<audio id="bgmusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/11/25/audio_6f3165f278.mp3" type="audio/mpeg">
-</audio>
-
-<canvas class="snow"></canvas>
-
-<script>
-/* ---------- Configuration de test ---------- */
-const MODE_TEST = true;     // true = toutes les cases ouvrables pour tester
-const TEST_DAY = 24;        // jour simulé (inutile si MODE_TEST true mais présent)
-const ADMIN_KEY = "edm2024"; // clé admin (toujours active)
-
-/* ---------- Données (noms & messages) ---------- */
-const noms = [
-  "Annie-Claude","Anne-Laure","Brigitte","Denise","Elise","Emmanuelle",
-  "Fatima","Guillemette","Julie","Karima","Laure","Loïc",
-  "Marc","Michelle","Murielle","Nathalie","Nicole","Pascale",
-  "Roxane","Sidonie","Sylvie","Valérie","EDM"
-];
-const messages = [
-  "Laisse ton énergie positive briller autour de toi",
-  "Envoie un message positif sur le Teams de l’équipe",
-  "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF",
-  "Pause bien-être – étire-toi, respire, profite du moment",
-  "Tu inspires confiance par ton attitude posée et professionnelle",
-  "Ton expertise est précieuse et ta collaboration également",
-  "Aujourd’hui, je te souhaite un sourire qui dure toute la journée",
-  "Ton super pouvoir du jour, faire rire quelqu’un",
-  "Laisse un post-it positif sur un écran",
-  "Prends soin de toi aujourd’hui 🎅",
-  "Nous te remercions sincèrement pour ta collaboration",
-  "Bienvenue à l’école des métiers",
-  "Ton sens de l’analyse est un vrai atout pour notre équipe",
-  "Tu fais preuve d’une belle curiosité intellectuelle",
-  "Tu es toujours prête à donner un coup de main à tes collègues",
-  "Tu es toujours attentive aux autres. Merci pour ta bienveillance",
-  "Tu ne t’ennuies jamais",
-  "Gardez le sourire, le meilleur reste à venir",
-  "Dis-nous 3 choses qui rendent heureuse",
-  "Tes efforts d’aujourd’hui sont les réussites de demain",
-  "Merci pour l’énergie et le bien-être que tu transmets aux agents",
-  "Ta capacité à résoudre des problèmes complexes est admirable",
-  "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄"
-];
-
-/* ---------- Date (mode test fiable) ---------- */
-let today;
-if (MODE_TEST) {
-  // crée une date de décembre fiable (année courante)
-  const year = new Date().getFullYear();
-  today = new Date(year, 11, TEST_DAY); // 11 = décembre
-} else {
-  today = new Date();
-}
-const currentMonth = today.getMonth(); // 11 = décembre
-const currentDay = today.getDate();
-
-/* ---------- Snow canvas ---------- */
-const canvas = document.querySelector('canvas.snow');
-const ctx = canvas.getContext('2d');
-function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
-window.addEventListener('resize', resize);
-resize();
-
-let flakes = [];
-let baseCount = 90;
-function createFlakes(n){
-  flakes = Array.from({length:n}, ()=>({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+0.8, d:Math.random()+0.3 }));
-}
-createFlakes(baseCount);
-
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='white'; ctx.beginPath();
-  for(const f of flakes){ ctx.moveTo(f.x,f.y); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); }
-  ctx.fill();
-  for(const f of flakes){ f.y += Math.pow(f.d,2)+0.6; if(f.y>canvas.height){ f.y=-10; f.x=Math.random()*canvas.width; } }
-  requestAnimationFrame(draw);
-}
-draw();
-
-/* ---------- Génération du calendrier ---------- */
-const cal = document.getElementById('calendar');
-const N = Math.min(noms.length, messages.length);
-
-for(let i=0;i<N;i++){
-  const day = i+1;
-  const door = document.createElement('div');
-  door.className = 'door';
-
-  const front = document.createElement('div');
-  front.className = 'face front';
-  front.innerHTML = `<div style="font-size:1rem;">${noms[i] || ''}</div><div style="position:absolute;top:8px;left:10px;font-weight:800">${day}</div>`;
-
-  const back = document.createElement('div');
-  back.className = 'face back';
-  back.textContent = messages[i] || '';
-
-  door.appendChild(front);
-  door.appendChild(back);
-
-  // comportement selon date
-  if (MODE_TEST || currentMonth > 10 || day <= currentDay) {
-    // allow opening for test OR if in december OR past/current days
-    door.addEventListener('click', () => {
-      // if future in december block
-      if (!MODE_TEST && currentMonth === 11 && day > currentDay) {
-        alert("🎁 Patience ! Ce n'est pas encore ton jour.");
-        return;
-      }
-      // ask for name or admin
-      const input = prompt("🔐 Entrez votre prénom (ou clé admin) :");
-      if (!input) return;
-      const v = input.trim().toLowerCase();
-      const nameOk = (noms[i] || '').toLowerCase() === v;
-      const adminOk = v === ADMIN_KEY.toLowerCase();
-      if (!nameOk && !adminOk) {
-        alert("⛔ Désolé, cette case ne t’est pas destinée !");
-        return;
-      }
-      // open or show message
-      if (!door.classList.contains('open')) {
-        door.classList.add('open');
-        // intensify snow briefly
-        createFlakes(baseCount*2);
-        setTimeout(()=>createFlakes(baseCount), 3000);
-      } else {
-        door.classList.remove('open');
-      }
-    });
-  } else {
-    // before december: block everything
-    door.addEventListener('click',()=> alert("🎁 Patience ! Le calendrier débute le 1er décembre."));
-  }
-
-  cal.appendChild(door);
-}
-
-/* ---------- Music helper ---------- */
-document.addEventListener('DOMContentLoaded', ()=>{
-  const audio = document.getElementById('bgmusic');
-  audio.play().catch(()=> {
-    const btn = document.createElement('button');
-    btn.textContent = '▶ Lancer la musique';
-    Object.assign(btn.style,{position:'fixed',top:'10px',right:'10px',zIndex:5,padding:'8px 10px',background:'#a41616',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer'});
-    btn.onclick = ()=> { audio.play(); btn.remove(); };
-    document.body.appendChild(btn);
+  // Ouvrir seulement si le jour est atteint
+  porte.addEventListener("click", () => {
+    if (jour > currentDay && !modeTest) {
+      alert("Patience... ce jour n’est pas encore arrivé !");
+      return;
+    }
+    porte.classList.toggle("open");
   });
-});
+}
 </script>
-</body>
-</html>
 
-  
-  
+
+
+ 
+ 
+
+
+
+
 
 
 
