@@ -1,284 +1,138 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>L’Avent magique de l’EDM</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L’avent magique de l’EDM</title>
 <style>
-  /* Page */
-  body {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
-    background: linear-gradient(#b30000,#600000);
-    color: #fff;
-    text-align: center;
-  }
-  h1 { margin: 20px 0; font-size: 2rem; }
-  footer { margin: 10px 0; color: rgba(255,255,255,.85); }
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to bottom, #dbe9f4, #f8f8f8);
+  text-align: center;
+  padding: 20px;
+  color: #333;
+}
 
-  /* Grille */
-  #calendar {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 18px;
-    position: relative;
-    z-index: 1;
-  }
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #b30000;
+}
 
-  /* Case */
-  .door {
-    position: relative;
-    perspective: 900px;
-    height: 120px;
-    border-radius: 10px;
-    cursor: pointer;
-    overflow: visible;
-    transform-style: preserve-3d;
-  }
-  .front, .back {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    border-radius: 10px;
-    backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 8px;
-    box-sizing: border-box;
-    transition: transform .6s ease, box-shadow .4s ease;
-  }
-  .front {
-    background: #fff;
-    color: #900;
-    transform: rotateY(0deg);
-  }
-  .back {
-    background: #ffeedd;
-    color: #900;
-    transform: rotateY(180deg);
-    text-align: center;
-    padding: 12px;
-  }
-  .door.open {
-    transform: rotateY(180deg);
-    animation: sparkle 1.6s infinite;
-  }
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(6, 100px);
+  grid-gap: 10px;
+  justify-content: center;
+}
 
-  /* hover illumination */
-  .door:hover .front { box-shadow: 0 0 16px 6px rgba(255,215,0,0.7); transform: scale(1.03); }
+.door {
+  position: relative;
+  background: #b30000;
+  color: white;
+  border-radius: 8px;
+  height: 100px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
 
-  /* sparkle */
-  @keyframes sparkle {
-    0% { box-shadow: 0 0 6px 2px gold; }
-    50% { box-shadow: 0 0 22px 6px #ffd700; }
-    100% { box-shadow: 0 0 6px 2px gold; }
-  }
+.door:hover {
+  transform: scale(1.05);
+}
 
-  /* Canvas snow under everything */
-  canvas.snow {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
-  }
+.door.open {
+  background: #fff8e1;
+  color: #333;
+  transform: rotateY(180deg);
+}
 
-  /* keep calendar and header on top of canvas */
-  #calendar, h1, footer { position: relative; z-index: 2; }
+.door-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+  padding: 10px;
+  transform: rotateY(180deg);
+  font-size: 0.8em;
+}
 
-  /* small screen: reduce size */
-  @media (max-width:700px) {
-    #calendar { grid-template-columns: repeat(4, 1fr); padding: 12px; }
-    .door { height: 100px; }
-  }
-  @media (max-width:420px) {
-    #calendar { grid-template-columns: repeat(3, 1fr); gap:8px; }
-    .door { height: 90px; }
-    h1 { font-size:1.4rem; }
-  }
+.door-number {
+  font-size: 1.5em;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
 </style>
 </head>
 <body>
-  <h1>🎄 L’Avent magique de l’EDM</h1>
-  <div id="calendar" aria-live="polite"></div>
-  <footer id="page-footer">Calendrier de l’Avent — EDM</footer>
-
-  <!-- musique douce (si navigateur bloque autoplay, un bouton apparaîtra) -->
-  <audio id="bgmusic" loop>
-    <source src="https://cdn.pixabay.com/audio/2022/11/25/audio_6f3165f278.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- neige -->
-  <canvas class="snow"></canvas>
+<h1>L’avent magique de l’EDM 🎄</h1>
+<div id="calendar"></div>
 
 <script>
-/* ================= CONFIG ================= */
-// TEST_MODE : mettre false pour production (déploiement). Ici false par défaut.
-const TEST_MODE = false;    // true = simulateur (utile en local pour tester)
-const TEST_DAY  = 5;        // jour simulé si TEST_MODE = true (1..24)
-const ADMIN_KEY = "edm2024"; // clé admin pour tests / dépannage
+const modeTest = true; // <-- Active le mode test (true = toutes les cases ouvertes)
 
-/* ================ DONNÉES ================ */
-const noms = [
-  "Annie-Claude","Anne-Laure","Brigitte","Denise","Elise","Emmanuelle",
-  "Fatima","Guillemette","Julie","Karima","Laure","Loïc",
-  "Marc","Michelle","Murielle","Nathalie","Nicole","Pascale",
-  "Roxane","Sidonie","Sylvie","Valérie","EDM"
-];
-const messages = [
-  "Laisse ton énergie positive briller autour de toi",
-  "Envoie un message positif sur le Teams de l’équipe",
-  "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF",
-  "Pause bien-être – étire-toi, respire, profite du moment",
-  "Tu inspires confiance par ton attitude posée et professionnelle",
-  "Ton expertise est précieuse et ta collaboration également",
-  "Aujourd’hui, je te souhaite un sourire qui dure toute la journée",
-  "Ton super pouvoir du jour, faire rire quelqu’un",
-  "Laisse un post-it positif sur un écran",
-  "Prends soin de toi aujourd’hui 🎅",
-  "Nous te remercions sincèrement pour ta collaboration",
-  "Bienvenue à l’école des métiers",
-  "Ton sens de l’analyse est un vrai atout pour notre équipe",
-  "Tu fais preuve d’une belle curiosité intellectuelle",
-  "Tu es toujours prête à donner un coup de main à tes collègues",
-  "Tu es toujours attentive aux autres. Merci pour ta bienveillance",
-  "Tu ne t’ennuies jamais",
-  "Gardez le sourire, le meilleur reste à venir",
-  "Dis-nous 3 choses qui rendent heureuse",
-  "Tes efforts d’aujourd’hui sont les réussites de demain",
-  "Merci pour l’énergie et le bien-être que tu transmets aux agents",
-  "Ta capacité à résoudre des problèmes complexes est admirable",
-  "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄"
-];
+const messages = {
+  1: "Annie-Claude : laisse ton énergie positive briller autour de toi",
+  2: "Anne-Laure : Envoie un message positif sur le Teams de l’équipe",
+  3: "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF",
+  4: "Denise : Pause bien-être - étire-toi, respire, profite du moment",
+  5: "Elise : Tu inspires confiance par ton attitude posée et professionnelle",
+  6: "Emmanuelle : Ton expertise est précieuse et ta collaboration également",
+  7: "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée",
+  8: "Guillemette : Ton super pouvoir du jour, faire rire quelqu’un",
+  9: "Julie : Laisse un post-it positif sur un écran",
+  10: "Karima : Ta bonne humeur est contagieuse !",
+  11: "Laure : Nous te remercions sincèrement pour ta collaboration",
+  12: "Loïc : Bienvenue à l’école des métiers !",
+  13: "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe",
+  14: "Michelle : Tu fais preuve d’une belle curiosité intellectuelle",
+  15: "Murielle : Tu es toujours prête à donner un coup de main à tes collègues",
+  16: "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance",
+  17: "Nicole : Tu ne t’ennuies jamais !",
+  18: "Pascale : Gardez le sourire, le meilleur reste à venir",
+  19: "Roxane : Dis-nous 3 choses qui te rendent heureuse",
+  20: "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain",
+  21: "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents",
+  22: "Valérie : Ta capacité à résoudre des problèmes complexes est admirable",
+  23: "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎅",
+  24: "Toute l’équipe EDM : Bravo pour cette belle année ensemble 🎁"
+};
 
-/* ================ Date handling ================ */
-let today = new Date();
-if (TEST_MODE) {
-  // create a clean date for December TEST_DAY (reliable across browsers)
-  today = new Date(new Date().getFullYear(), 11, TEST_DAY);
-}
-const currentMonth = today.getMonth(); // 0=Jan ... 11=Dec
+const calendar = document.getElementById("calendar");
+const today = modeTest ? new Date(2024, 11, 24) : new Date();
 const currentDay = today.getDate();
 
-/* ================ Snow (canvas) ================ */
-const canvas = document.querySelector('canvas.snow');
-const ctx = canvas.getContext('2d');
+for (let jour = 1; jour <= 24; jour++) {
+  const door = document.createElement("div");
+  door.classList.add("door");
 
-function resizeCanvas(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
+  const number = document.createElement("div");
+  number.classList.add("door-number");
+  number.textContent = jour;
 
-let baseFlakeCount = 100;
-let flakes = [];
+  const content = document.createElement("div");
+  content.classList.add("door-content");
+  content.textContent = messages[jour] || "";
 
-function createFlakes(n) {
-  flakes = Array.from({length: n}, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 3 + 1,
-    d: Math.random() + 0.5
-  }));
-}
-createFlakes(baseFlakeCount);
+  door.appendChild(number);
+  door.appendChild(content);
 
-function drawSnow() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = 'white';
-  ctx.beginPath();
-  for (const f of flakes) {
-    ctx.moveTo(f.x, f.y);
-    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-  }
-  ctx.fill();
-  // move
-  for (const f of flakes) {
-    f.y += Math.pow(f.d, 2) + 0.8;
-    if (f.y > canvas.height) { f.y = -10; f.x = Math.random() * canvas.width; }
-  }
-  requestAnimationFrame(drawSnow);
-}
-drawSnow();
-
-/* ================ Calendar generation ================ */
-const cal = document.getElementById('calendar');
-
-// safety: ensure arrays same length
-const N = Math.min(noms.length, messages.length);
-
-for (let i = 0; i < N; i++) {
-  const dayNumber = i + 1;
-  const door = document.createElement('div');
-  door.className = 'door';
-  door.innerHTML = `
-    <div class="front"><strong>${dayNumber}</strong><br>${noms[i]}</div>
-    <div class="back">${messages[i]}</div>
-  `;
-
-  door.addEventListener('click', () => {
-    // Before December -> block
-    if (currentMonth < 11) {
-      alert('🎁 Patience ! Le calendrier débute le 1er décembre.');
-      return;
-    }
-    // Future day -> block
-    if (dayNumber > currentDay) {
-      alert('🎁 Patience ! Ce n’est pas encore ton jour.');
-      return;
-    }
-
-    // Ask for name or admin
-    const saisie = prompt('🔐 Entrez votre prénom pour ouvrir la case (ou la clé admin) :');
-    if (!saisie) return;
-    const txt = saisie.trim().toLowerCase();
-    const nomOk = txt === (noms[i] || '').toLowerCase();
-    const adminOk = txt === ADMIN_KEY.toLowerCase();
-
-    if (!nomOk && !adminOk) {
-      alert('⛔ Désolé, cette case ne t’est pas destinée !');
-      return;
-    }
-
-    // If correct:
-    if (dayNumber === currentDay) {
-      // toggle open for day J
-      door.classList.toggle('open');
-      // intensify snow briefly
-      createFlakes(baseFlakeCount * 2);
-      setTimeout(() => createFlakes(baseFlakeCount), 3000);
-      return;
-    } else {
-      // past day: show message in alert (or you can toggle open if you prefer)
-      alert(`(${dayNumber} décembre) ${messages[i]}`);
-    }
-  });
-
-  cal.appendChild(door);
-}
-
-/* ================ Music autoplay helper ================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const audio = document.getElementById('bgmusic');
-  audio.play().catch(() => {
-    // show small play button if autoplay blocked
-    const btn = document.createElement('button');
-    btn.textContent = '▶ Lancer la musique';
-    Object.assign(btn.style, {
-      position: 'fixed', top: '10px', right: '10px', zIndex: 3,
-      padding: '8px 12px', background: '#c0392b', color: '#fff',
-      border: 'none', borderRadius: '6px', cursor: 'pointer'
+  if (modeTest || jour <= currentDay) {
+    door.addEventListener("click", () => {
+      door.classList.toggle("open");
     });
-    btn.addEventListener('click', () => { audio.play(); btn.remove(); });
-    document.body.appendChild(btn);
-  });
-});
+  } else {
+    door.addEventListener("click", () => {
+      alert("Patience ! Ce jour n'est pas encore arrivé 🎁");
+    });
+  }
+
+  calendar.appendChild(door);
+}
 </script>
 </body>
 </html>
