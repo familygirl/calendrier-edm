@@ -1,1 +1,70 @@
-calendrier.html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Calendrier EDM - test</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f7f9fb;color:#222;text-align:center;padding:20px}
+  h1{color:#b30000}
+  #calendar{display:grid;grid-template-columns:repeat(6,120px);gap:12px;max-width:840px;margin:20px auto}
+  .door{height:110px;border-radius:10px;background:#b30000;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;position:relative}
+  .door.open{background:#fff8e0;color:#b30000}
+  .door .msg{display:none;position:absolute;padding:10px;left:8px;right:8px;top:8px;bottom:8px;overflow:auto}
+  .door.open .msg{display:block}
+  @media(max-width:700px){#calendar{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:420px){#calendar{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+  <h1>L’avent magique de l’EDM (mode test)</h1>
+  <div id="calendar"></div>
+
+<script>
+const modeTest = true; // true = toutes les cases ouvrables
+const texts = {
+  1:"Annie-Claude : laisse ton énergie positive briller autour de toi",
+  2:"Anne-Laure : Envoie un message positif sur le Teams de l’équipe",
+  3:"Brigitte : Chapeau ! Pour ta mission CPF",
+  4:"Denise : Pause bien-être - respire et étire-toi",
+  5:"Elise : Tu inspires confiance par ton attitude posée",
+  6:"Emmanuelle : Ton expertise est précieuse",
+  7:"Fatima : Je te souhaite un sourire qui dure",
+  8:"Guillemette : Fais rire quelqu'un aujourd'hui",
+  9:"Julie : Laisse un post-it positif sur un écran",
+  10:"Karima : Ta bonne humeur est contagieuse",
+  11:"Laure : Merci pour ta collaboration",
+  12:"Loïc : Bienvenue à l’école des métiers",
+  13:"Marc : Ton sens de l’analyse est un atout",
+  14:"Michelle : Belle curiosité intellectuelle",
+  15:"Murielle : Toujours prête à aider",
+  16:"Nathalie : Merci pour ta bienveillance",
+  17:"Nicole : Tu ne t’ennuies jamais",
+  18:"Pascale : Gardez le sourire, le meilleur reste à venir",
+  19:"Roxane : Dis-nous 3 choses qui te rendent heureuse",
+  20:"Sidonie : Tes efforts forment le succès de demain",
+  21:"Sylvie : Merci pour l’énergie que tu transmets",
+  22:"Valérie : Ta capacité à résoudre des problèmes est admirable",
+  23:"EDM : Joyeux Noël à toute l’équipe, merci pour votre solidarité",
+  24:"Toute l’équipe EDM : Bravo pour cette belle année ensemble"
+};
+
+const cal = document.getElementById('calendar');
+for(let i=1;i<=24;i++){
+  const d = document.createElement('div');
+  d.className='door';
+  d.innerHTML = `<div style="font-size:20px">${i}</div><div class="msg">${texts[i]||''}</div>`;
+  d.addEventListener('click',()=>{
+    if(!modeTest){
+      const now = new Date();
+      if(now.getMonth()!==11 && i>1){ alert("Patience, le calendrier débute en décembre."); return; }
+      if(i>now.getDate()){ alert("Patience, ce n'est pas encore ton jour."); return; }
+    }
+    d.classList.toggle('open');
+  });
+  cal.appendChild(d);
+}
+</script>
+</body>
+</html>
+
