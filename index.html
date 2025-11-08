@@ -82,6 +82,7 @@
     max-width: 80%;
     color: #b30000;
     font-weight: 500;
+    z-index: 100;
   }
 
   .message.show {
@@ -99,16 +100,42 @@
     font-size: 0.9em;
     color: #777;
   }
+
+  #musicControl {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: #b30000;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+  }
+
+  #musicControl:hover {
+    transform: scale(1.1);
+  }
 </style>
 </head>
 <body>
   <h1>🎁 Calendrier de l’Avent EDM 🎅</h1>
+
+  <button id="musicControl">🔇</button>
 
   <div class="calendar" id="calendar"></div>
 
   <div class="message" id="messageBox"></div>
 
   <footer>Créé avec 🎄 et ☕ par l’équipe EDM</footer>
+
+  <audio id="backgroundMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/12/01/audio_daeaa929a2.mp3?filename=jingle-bells-soft-piano-183292.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
     const messages = [
@@ -165,12 +192,34 @@
           setTimeout(() => {
             messageBox.textContent = messages[i - 1];
             messageBox.classList.add('show');
-            setTimeout(() => messageBox.classList.remove('show'), 5000);
           }, 800);
         }
       });
     }
+
+    // Gestion de la musique
+    const music = document.getElementById('backgroundMusic');
+    const btn = document.getElementById('musicControl');
+    let playing = false;
+
+    btn.addEventListener('click', () => {
+      if (playing) {
+        music.pause();
+        btn.textContent = "🔇";
+      } else {
+        music.play();
+        btn.textContent = "🎵";
+      }
+      playing = !playing;
+    });
   </script>
 </body>
 </html>
 
+ 
+ 
+  
+   
+
+    
+            
