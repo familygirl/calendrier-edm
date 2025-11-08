@@ -3,21 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendrier de l'Avent EDM 🎄</title>
+<title>🎄 L’Avent magique de l’EDM 🎁</title>
 <style>
   body {
     font-family: "Poppins", sans-serif;
-    background: linear-gradient(135deg, #dfe9f3 0%, #ffffff 100%);
+    background: linear-gradient(180deg, #cce3f7 0%, #ffffff 100%);
     color: #333;
     text-align: center;
     margin: 0;
     padding: 20px;
+    overflow: hidden;
   }
 
   h1 {
     color: #b30000;
     font-size: 2em;
     margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.7);
   }
 
   .calendar {
@@ -70,8 +72,8 @@
 
   .message {
     display: none;
-    position: absolute;
-    background: #ffffff;
+    position: fixed;
+    background: rgba(255,255,255,0.97);
     border: 2px solid #b30000;
     padding: 20px;
     border-radius: 10px;
@@ -95,12 +97,6 @@
     to { opacity: 1; transform: translate(-50%, -50%); }
   }
 
-  footer {
-    margin-top: 40px;
-    font-size: 0.9em;
-    color: #777;
-  }
-
   #musicControl {
     position: fixed;
     top: 15px;
@@ -109,8 +105,8 @@
     color: white;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     font-size: 1.2em;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
@@ -120,10 +116,33 @@
   #musicControl:hover {
     transform: scale(1.1);
   }
+
+  footer {
+    margin-top: 40px;
+    font-size: 0.9em;
+    color: #777;
+  }
+
+  /* ❄️ Animation neige */
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 1em;
+    pointer-events: none;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(100vh);
+      opacity: 0;
+    }
+  }
 </style>
 </head>
 <body>
-  <h1>🎁 Calendrier de l’Avent EDM 🎅</h1>
+  <h1>🎁 L’Avent magique de l’EDM 🎅</h1>
 
   <button id="musicControl">🔇</button>
 
@@ -170,6 +189,7 @@
     const today = new Date();
     const currentDay = today.getDate();
 
+    // Créer les cases du calendrier
     for (let i = 1; i <= 24; i++) {
       const day = document.createElement('div');
       day.classList.add('day');
@@ -192,6 +212,9 @@
           setTimeout(() => {
             messageBox.textContent = messages[i - 1];
             messageBox.classList.add('show');
+            setTimeout(() => {
+              messageBox.classList.remove('show');
+            }, 20000); // 20 secondes d'affichage
           }, 800);
         }
       });
@@ -212,14 +235,29 @@
       }
       playing = !playing;
     });
+
+    // ❄️ Animation de neige
+    function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.textContent = "❄";
+      snowflake.style.left = Math.random() * 100 + "vw";
+      snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+      snowflake.style.animationDuration = Math.random() * 3 + 5 + "s";
+      document.body.appendChild(snowflake);
+      setTimeout(() => snowflake.remove(), 8000);
+    }
+
+    setInterval(createSnowflake, 150);
   </script>
 </body>
 </html>
 
  
- 
-  
-   
-
     
-            
+
+     
+      
+       
+       
+
