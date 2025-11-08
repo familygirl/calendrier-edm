@@ -1,238 +1,145 @@
 <!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>L’avent magique de l’EDM</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #002b46;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-top: 20px;
+      color: #fff;
+      text-shadow: 0 0 10px #ff77ff, 0 0 20px #ff77ff;
+      animation: scintillant 1.5s infinite alternate;
+    }
+
+    @keyframes scintillant {
+      from { text-shadow: 0 0 10px #ff77ff, 0 0 20px #ff77ff; }
+      to { text-shadow: 0 0 20px #ffff77, 0 0 40px #ffff77; }
+    }
+
+    .calendrier {
+      display: grid;
+      grid-template-columns: repeat(6, 120px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .case {
+      background-color: #ff66a3;
+      color: white;
+      border-radius: 10px;
+      font-size: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 10px;
+      text-align: center;
+      transition: transform 0.4s, background-color 0.4s, box-shadow 0.4s;
+    }
+
+    .case:hover {
+      background-color: #ff99cc;
+      transform: scale(1.05);
+    }
+
+    .case.ouverte {
+      background-color: #ffe680;
+      color: #002b46;
+      transform: scale(1.2);
+      box-shadow: 0 0 20px #fff;
+    }
+
+    .message {
+      margin-top: 30px;
+      font-size: 1.2em;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-block;
+      max-width: 500px;
+      animation: fadein 1s ease;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎄 L’avent magique de l’EDM 🎁</h1>
+  <div class="calendrier" id="calendrier"></div>
+  <div id="messageContainer"></div>
+
+  <script>
+    const cases = [
+      { nom: "Annie-Claude", message: "Laisse ton énergie positive briller autour de toi 🌟" },
+      { nom: "Anne-Laure", message: "Envoie un message positif sur le Teams de l’équipe 💌" },
+      { nom: "Brigitte", message: "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓" },
+      { nom: "Denise", message: "Pause bien-être – étire-toi, respire, profite du moment 🌸" },
+      { nom: "Élise", message: "Tu inspires confiance par ton attitude posée et professionnelle 🤝" },
+      { nom: "Emmanuelle", message: "Ton expertise est précieuse et ta collaboration également 💼" },
+      { nom: "Fatima", message: "Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊" },
+      { nom: "Guillemette", message: "Ton super pouvoir du jour — faire rire quelqu’un 😄" },
+      { nom: "Julie", message: "Laisse un post-it positif sur un écran 📝" },
+      { nom: "Karima", message: "Tu es une belle source d’énergie dans l’équipe ☀️" },
+      { nom: "Laure", message: "Nous te remercions sincèrement pour ta collaboration 🤗" },
+      { nom: "Loïc", message: "Bienvenue à l’école des métiers 🎉" },
+      { nom: "Marc", message: "Ton sens de l’analyse est un vrai atout pour notre équipe 🔍" },
+      { nom: "Michelle", message: "Tu fais preuve d’une belle curiosité intellectuelle 📚" },
+      { nom: "Murielle", message: "Tu es toujours prête à donner un coup de main à tes collègues 💪" },
+      { nom: "Nathalie", message: "Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖" },
+      { nom: "Nicole", message: "😄" },
+      { nom: "Pascale", message: "Garde le sourire, le meilleur reste à venir 🌈" },
+      { nom: "Roxane", message: "Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺" },
+      { nom: "Sidonie", message: "Tes efforts d’aujourd’hui sont les réussites de demain 🚀" },
+      { nom: "Sylvie", message: "Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞" },
+      { nom: "Valérie", message: "Ta capacité à résoudre des problèmes complexes est admirable 🧠" },
+      { nom: "EDM", message: "Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄" },
+      { nom: "🎅 Un dernier mot", message: "Que cette fin d’année soit remplie de sourires et de chaleur ✨" }
+    ];
+
+    const calendrier = document.getElementById("calendrier");
+    const messageContainer = document.getElementById("messageContainer");
+    const dateAujourdhui = new Date();
+    const jour = dateAujourdhui.getDate();
+    const mois = dateAujourdhui.getMonth();
+
+    cases.forEach((item, index) => {
+      const caseDiv = document.createElement("div");
+      caseDiv.className = "case";
+      caseDiv.textContent = item.nom;
+
+      caseDiv.onclick = () => {
+        if (mois === 11 && index + 1 <= jour) {
+          document.querySelectorAll(".case").forEach(c => c.classList.remove("ouverte"));
+          caseDiv.classList.add("ouverte");
+          messageContainer.innerHTML = `<div class="message"><strong>${item.nom}</strong> 🎁<br>${item.message}</div>`;
+          setTimeout(() => {
+            caseDiv.classList.remove("ouverte");
+            messageContainer.innerHTML = "";
+          }, 20000);
+        } else if (mois !== 11) {
+          alert("Patience... le calendrier ne s’ouvre qu’en décembre 🎁");
+        } else {
+          alert(`Patience... ce n’est pas encore le jour ${index + 1} 🎁`);
+        }
+      };
+
+      calendrier.appendChild(caseDiv);
+    });
+  </script>
+</body>
+</html>
 
-	<html lang="fr">
 
-	<head>
 
-	  <meta charset="UTF-8">
-
-	  <title>L’avent magique de l’EDM</title>
-
-	  <style>
-
-	    body {
-
-	      font-family: 'Comic Sans MS', cursive, sans-serif;
-
-	      background-color: #002b46;
-
-	      color: white;
-
-	      text-align: center;
-
-	    }
-
-	
-	
-
-	    h1 {
-
-	      font-size: 2em;
-
-	      margin-top: 20px;
-
-	      color: #fff;
-
-	      text-shadow: 0 0 10px #ff77ff, 0 0 20px #ff77ff;
-
-	      animation: scintillant 1.5s infinite alternate;
-
-	    }
-
-	
-	
-
-	    @keyframes scintillant {
-
-	      from { text-shadow: 0 0 10px #ff77ff, 0 0 20px #ff77ff; }
-
-	      to { text-shadow: 0 0 20px #ffff77, 0 0 40px #ffff77; }
-
-	    }
-
-	
-	
-
-	    .calendrier {
-
-	      display: grid;
-
-	      grid-template-columns: repeat(6, 120px);
-
-	      grid-gap: 15px;
-
-	      justify-content: center;
-
-	      margin-top: 30px;
-
-	    }
-
-	
-	
-
-	    .case {
-
-	      background-color: #ff66a3;
-
-	      color: white;
-
-	      border-radius: 10px;
-
-	      font-size: 1em;
-
-	      display: flex;
-
-	      align-items: center;
-
-	      justify-content: center;
-
-	      cursor: pointer;
-
-	      padding: 10px;
-
-	      text-align: center;
-
-	      transition: transform 0.2s, background-color 0.3s;
-
-	    }
-
-	
-	
-
-	    .case:hover {
-
-	      background-color: #ff99cc;
-
-	      transform: scale(1.1);
-
-	    }
-
-	  </style>
-
-	</head>
-
-	<body>
-
-	  <h1>🎄 L’avent magique de l’EDM 🎁</h1>
-
-	  <div class="calendrier" id="calendrier"></div>
-
-	
-	
-
-	  <script>
-
-	    const cases = [
-
-	      { nom: "Annie-Claude", message: "Laisse ton énergie positive briller autour de toi 🌟" },
-
-	      { nom: "Anne-Laure", message: "Envoie un message positif sur le Teams de l’équipe 💌" },
-
-	      { nom: "Brigitte", message: "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓" },
-
-	      { nom: "Denise", message: "Pause bien-être – étire-toi, respire, profite du moment 🌸" },
-
-	      { nom: "Élise", message: "Tu inspires confiance par ton attitude posée et professionnelle 🤝" },
-
-	      { nom: "Emmanuelle", message: "Ton expertise est précieuse et ta collaboration également 💼" },
-
-	      { nom: "Fatima", message: "Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊" },
-
-	      { nom: "Guillemette", message: "Ton super pouvoir du jour — faire rire quelqu’un 😄" },
-
-	      { nom: "Julie", message: "Laisse un post-it positif sur un écran 📝" },
-
-	      { nom: "Karima", message: "Tu es une belle source d’énergie dans l’équipe ☀️" },
-
-	      { nom: "Laure", message: "Nous te remercions sincèrement pour ta collaboration 🤗" },
-
-	      { nom: "Loïc", message: "Bienvenue à l’école des métiers 🎉" },
-
-	      { nom: "Marc", message: "Ton sens de l’analyse est un vrai atout pour notre équipe 🔍" },
-
-	      { nom: "Michelle", message: "Tu fais preuve d’une belle curiosité intellectuelle 📚" },
-
-	      { nom: "Murielle", message: "Tu es toujours prête à donner un coup de main à tes collègues 💪" },
-
-	      { nom: "Nathalie", message: "Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖" },
-
-	      { nom: "Nicole", message: "😄" },
-
-	      { nom: "Pascale", message: "Garde le sourire, le meilleur reste à venir 🌈" },
-
-	      { nom: "Roxane", message: "Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺" },
-
-	      { nom: "Sidonie", message: "Tes efforts d’aujourd’hui sont les réussites de demain 🚀" },
-
-	      { nom: "Sylvie", message: "Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞" },
-
-	      { nom: "Valérie", message: "Ta capacité à résoudre des problèmes complexes est admirable 🧠" },
-
-	      { nom: "EDM", message: "Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄" },
-
-	      { nom: "🎅 Un dernier mot", message: "Que cette fin d’année soit remplie de sourires et de chaleur ✨" }
-
-	    ];
-
-	
-	
-
-	    const calendrier = document.getElementById("calendrier");
-
-	    const dateAujourdhui = new Date();
-
-	    const jour = dateAujourdhui.getDate();
-
-	    const mois = dateAujourdhui.getMonth();
-
-	
-	
-
-	    cases.forEach((item, index) => {
-
-	      const caseDiv = document.createElement("div");
-
-	      caseDiv.className = "case";
-
-	      caseDiv.textContent = item.nom;
-
-	
-	
-
-	      caseDiv.onclick = () => {
-
-	        if (mois === 11 && index + 1 <= jour) {
-
-	          alert(`${item.nom} 🎁\n\n${item.message}`);
-
-	        } else if (mois !== 11) {
-
-	          alert("Patience... le calendrier ne s’ouvre qu’en décembre 🎁");
-
-	        } else {
-
-	          alert(`Patience... ce n’est pas encore le jour ${index + 1} 🎁`);
-
-	        }
-
-	      };
-
-	
-	
-
-	      calendrier.appendChild(caseDiv);
-
-	    });
-
-	  </script>
-
-	</body>
-
-	</html>
-
-
-     
-    
-    
-
-      
