@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calendrier de l’Avent magique de l'EDM 🎁</title>
   <style>
-    /* Fond simple avec dégradé */
     body {
       background: linear-gradient(to bottom, #001f3f, #003366);
       min-height: 100vh;
@@ -15,7 +14,6 @@
       text-align: center;
     }
 
-    /* Titre scintillant */
     h1.scintillant {
       font-size: 2.5em;
       margin: 20px 0;
@@ -23,7 +21,6 @@
       text-shadow: 0 0 10px #fff, 0 0 20px #ff69b4, 0 0 30px #ff1493;
     }
 
-    /* Grille du calendrier */
     .calendrier {
       display: grid;
       grid-template-columns: repeat(6, 100px);
@@ -32,7 +29,6 @@
       padding: 20px;
     }
 
-    /* Cases du calendrier */
     .case {
       width: 100px;
       height: 100px;
@@ -60,7 +56,7 @@
 
   <script>
     const calendrier = document.getElementById("calendrier");
-    const aujourdHui = new Date().getDate(); // Jour actuel du mois
+    const aujourdHui = new Date().getDate();
 
     for (let i = 1; i <= 24; i++) {
       const caseJour = document.createElement("div");
@@ -76,34 +72,8 @@
       calendrier.appendChild(caseJour);
     }
 
-    // Effet scintillant sur le titre
     document.querySelector("h1").classList.add("scintillant");
   </script>
 </body>
 </html>
-
-
-
-
- 
- 
-
-
-
-  
-  
-  
-   
-   
-       
-       
-
-
-
-
-
-
-
-
-
 
