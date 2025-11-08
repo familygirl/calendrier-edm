@@ -3,258 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎄 L’Avent magique de l’EDM 🎁</title>
+<title>L’avent magique de l’EDM</title>
 <style>
-  body {
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(180deg, #cce3f7 0%, #ffffff 100%);
-    color: #333;
-    text-align: center;
-    margin: 0;
-    padding: 20px;
-    overflow: hidden;
-  }
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background: linear-gradient(#003366, #000);
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
 
-  h1 {
-    color: #b30000;
-    font-size: 2em;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 3px rgba(255,255,255,0.7);
-  }
+/* Effet neige */
+@keyframes snow {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 1000px; }
+}
 
-  .calendar {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    max-width: 700px;
-    margin: 0 auto;
-  }
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url('https://i.imgur.com/9v3X2QW.png');
+  animation: snow 20s linear infinite;
+  opacity: 0.4;
+  pointer-events: none;
+}
 
-  .day {
-    position: relative;
-    background-color: #b30000;
-    color: white;
-    font-weight: bold;
-    border-radius: 10px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, background 0.3s ease;
-    overflow: hidden;
+/* Titre scintillant */
+h1.scintillant {
+  font-size: 2.5em;
+  margin: 20px 0;
+  color: #fff;
+  text-shadow: 0 0 10px #fff, 0 0 20px #ff69b4, 0 0 30px #ff1493;
+  animation: scintille 2s infinite alternate;
+}
+@keyframes scintille {
+  from {
+    text-shadow: 0 0 5px #fff, 0 0 10px #ff69b4, 0 0 15px #ff1493;
   }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff69b4, 0 0 40px #ff1493;
+  }
+}
 
-  .day:hover {
-    transform: scale(1.05);
-    background: #d62e2e;
-  }
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  justify-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
 
-  .day.opened {
-    background: #fff5f5;
-    color: #b30000;
-    cursor: default;
-  }
+.case {
+  background: #ff69b4;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s;
+}
 
-  .door {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #b30000;
-    border-radius: 10px;
-    transform-origin: left;
-    transition: transform 0.8s ease-in-out;
-  }
+.case:hover {
+  transform: scale(1.1);
+}
 
-  .day.opened .door {
-    transform: rotateY(-100deg);
-  }
+.message {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.9);
+  padding: 20px;
+  border-radius: 15px;
+  color: white;
+  font-size: 1.2em;
+  width: 60%;
+  max-width: 500px;
+  z-index: 10;
+}
 
-  .message {
-    display: none;
-    position: fixed;
-    background: rgba(255,255,255,0.97);
-    border: 2px solid #b30000;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 80%;
-    color: #b30000;
-    font-weight: 500;
-    z-index: 100;
-  }
-
-  .message.show {
-    display: block;
-    animation: fadeIn 0.5s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translate(-50%, -45%); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
-  }
-
-  #musicControl {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: #b30000;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 1.2em;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: transform 0.3s;
-  }
-
-  #musicControl:hover {
-    transform: scale(1.1);
-  }
-
-  footer {
-    margin-top: 40px;
-    font-size: 0.9em;
-    color: #777;
-  }
-
-  /* ❄️ Animation neige */
-  .snowflake {
-    position: fixed;
-    top: -10px;
-    color: white;
-    font-size: 1em;
-    pointer-events: none;
-    animation: fall linear infinite;
-  }
-
-  @keyframes fall {
-    to {
-      transform: translateY(100vh);
-      opacity: 0;
-    }
-  }
+.message.show {
+  display: block;
+}
 </style>
 </head>
 <body>
-  <h1>🎁 L’Avent magique de l’EDM 🎅</h1>
+<h1 class="scintillant">🎄 L’avent magique de l’EDM 🎁</h1>
+<div class="calendar" id="calendar"></div>
+<div class="message" id="messageBox"></div>
 
-  <button id="musicControl">🔇</button>
+<audio autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-christmas.mp3" type="audio/mpeg">
+</audio>
 
-  <div class="calendar" id="calendar"></div>
+<script>
+const messages = [
+  "1 : Annie-Claude — Laisse ton énergie positive briller autour de toi ✨",
+  "2 : Anne-Laure — Envoie un message positif sur le Teams de l’équipe 💌",
+  "3 : Brigitte — Chapeau ! Pour la manière dont tu as abordé la mission CPF 🎯",
+  "4 : Denise — Pause bien-être : étire-toi, respire et profite du moment 🌿",
+  "5 : Élise — Tu inspires confiance par ton attitude posée et professionnelle 💼",
+  "6 : Emmanuelle — Ton expertise est précieuse et ta collaboration aussi 🤝",
+  "7 : Fatima — Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
+  "8 : Guillemette — Ton super pouvoir du jour : faire rire quelqu’un 😄",
+  "9 : Julie — Laisse un post-it positif sur un écran 💛",
+  "10 : Karima — Merci pour ton implication et ta bonne humeur 🌟",
+  "11 : Laure — Nous te remercions sincèrement pour ta collaboration 💐",
+  "12 : Loïc — Bienvenue à l’École des Métiers ! 🎓",
+  "13 : Marc — Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
+  "14 : Michelle — Tu fais preuve d’une belle curiosité intellectuelle 📚",
+  "15 : Murielle — Toujours prête à aider tes collègues, merci pour ton soutien 🤗",
+  "16 : Nathalie — Merci pour ta bienveillance et ton écoute 💕",
+  "17 : Nicole — 😄",
+  "18 : Pascale — Garde le sourire, le meilleur reste à venir 🌈",
+  "19 : Roxane — Dis-nous 3 choses qui te rendent heureuse aujourd’hui 💬",
+  "20 : Sidonie — Tes efforts d’aujourd’hui sont les réussites de demain 💪",
+  "21 : Sylvie — Merci pour l’énergie et la bonne humeur que tu transmets 🌞",
+  "22 : Valérie — Ta capacité à résoudre les problèmes est admirable 🧩",
+  "23 : EDM — Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎅🎁",
+  "24 : Toute l’équipe — Bravo pour cette belle année ensemble ❤️"
+];
 
-  <div class="message" id="messageBox"></div>
+const cal = document.getElementById("calendar");
+const msgBox = document.getElementById("messageBox");
+const today = new Date();
+const month = today.getMonth();
+const day = today.getDate();
 
-  <footer>Créé avec 🎄 et ☕ par l’équipe EDM</footer>
+// Crée les 24 cases
+for (let i = 1; i <= 24; i++) {
+  const box = document.createElement("div");
+  box.className = "case";
+  box.textContent = i;
 
-  <audio id="backgroundMusic" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2023/12/01/audio_daeaa929a2.mp3?filename=jingle-bells-soft-piano-183292.mp3" type="audio/mpeg">
-  </audio>
+  if (month === 11 && day >= i) {
+    box.onclick = () => {
+      msgBox.textContent = messages[i - 1];
+      msgBox.classList.add("show");
+      setTimeout(() => msgBox.classList.remove("show"), 20000);
+    };
+  } else {
+    box.onclick = () => alert("Patience... ce n’est pas encore le jour " + i + " 🎁");
+  }
 
-  <script>
-    const messages = [
-      "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
-      "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-      "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-      "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-      "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-      "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-      "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
-      "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
-      "Julie : Laisse un post-it positif sur un écran 📝",
-      "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
-      "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-      "Loïc : Bienvenue à l’école des métiers 🎉",
-      "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-      "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-      "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-      "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-      "Nicole : Tu ne t’ennuies jamais et nous non plus grâce à toi 😄",
-      "Pascale : Garde le sourire, le meilleur reste à venir 🌈",
-      "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-      "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-      "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-      "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-      "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄",
-      "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-    ];
-
-    const calendar = document.getElementById('calendar');
-    const messageBox = document.getElementById('messageBox');
-    const today = new Date();
-    const currentDay = today.getDate();
-
-    // Créer les cases du calendrier
-    for (let i = 1; i <= 24; i++) {
-      const day = document.createElement('div');
-      day.classList.add('day');
-
-      const door = document.createElement('div');
-      door.classList.add('door');
-      day.appendChild(door);
-
-      day.textContent = i;
-      calendar.appendChild(day);
-
-      day.addEventListener('click', () => {
-        if (i > currentDay) {
-          alert("Patiente encore un peu, c’est pour un autre jour 🎅");
-          return;
-        }
-
-        if (!day.classList.contains('opened')) {
-          day.classList.add('opened');
-          setTimeout(() => {
-            messageBox.textContent = messages[i - 1];
-            messageBox.classList.add('show');
-            setTimeout(() => {
-              messageBox.classList.remove('show');
-            }, 20000); // 20 secondes d'affichage
-          }, 800);
-        }
-      });
-    }
-
-    // Gestion de la musique
-    const music = document.getElementById('backgroundMusic');
-    const btn = document.getElementById('musicControl');
-    let playing = false;
-
-    btn.addEventListener('click', () => {
-      if (playing) {
-        music.pause();
-        btn.textContent = "🔇";
-      } else {
-        music.play();
-        btn.textContent = "🎵";
-      }
-      playing = !playing;
-    });
-
-    // ❄️ Animation de neige
-    function createSnowflake() {
-      const snowflake = document.createElement('div');
-      snowflake.classList.add('snowflake');
-      snowflake.textContent = "❄";
-      snowflake.style.left = Math.random() * 100 + "vw";
-      snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
-      snowflake.style.animationDuration = Math.random() * 3 + 5 + "s";
-      document.body.appendChild(snowflake);
-      setTimeout(() => snowflake.remove(), 8000);
-    }
-
-    setInterval(createSnowflake, 150);
-  </script>
+  cal.appendChild(box);
+}
+</script>
 </body>
 </html>
 
-  
+
+
+ 
+ 
    
+    
+
+ 
+ 
+
+
+
   
   
   
@@ -262,5 +182,6 @@
    
        
        
+
 
 
