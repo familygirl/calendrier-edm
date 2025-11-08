@@ -1,113 +1,255 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendrier magique de l'EDM 🎁</title>
+
 <style>
-  body {
-    font-family: "Comic Sans MS", sans-serif;
-    background: linear-gradient(180deg, #001f4d, #003366);
-    color: white;
-    text-align: center;
-    margin: 0;
-    padding: 20px;
-  }
 
-  h1 {
-    font-size: 2em;
-    color: #fff;
-    text-shadow: 0 0 15px #f2c, 0 0 25px #fc2;
-  }
+  .affaire {
 
-  .calendrier {
-    display: grid;
-    grid-template-columns: repeat(6, 120px);
-    gap: 15px;
-    justify-content: center;
-    margin-top: 40px;
-  }
-
-  .case {
-    background-color: #ff66b2;
-    color: white;
-    font-weight: bold;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70px;
     width: 120px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+
+    height: 70px;
+
+    margin: 10px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+
+    color: white;
+
+    font-size: 16px;
+
+    transition: transform 0.4s ease, background-color 0.4s ease;
+
   }
 
-  .case:hover {
-    transform: scale(1.1);
-    background-color: #ff3385;
+
+
+
+  .affaire:hover {
+
+    transform: scale(1.05);
+
   }
+
+
+
+
+  /* Animation d’ouverture magique */
+
+  @keyframes ouverture {
+
+    0% {
+
+      transform: rotateY(0deg);
+
+      background-color: #ff66b2;
+
+    }
+
+    50% {
+
+      transform: rotateY(90deg);
+
+      background-color: gold;
+
+      color: black;
+
+    }
+
+    100% {
+
+      transform: rotateY(0deg);
+
+      background-color: #ff66b2;
+
+      color: white;
+
+    }
+
+  }
+
+
+
+
+  .ouvert {
+
+    animation: ouverture 0.8s ease;
+
+  }
+
+
+
+
+  /* Cases verrouillées */
+
+  .fermee {
+
+    background-color: gray !important;
+
+    opacity: 0.7;
+
+    cursor: not-allowed;
+
+  }
+
 </style>
-</head>
-<body>
 
-<h1>🎄 L'avent magique de l'EDM 🎁</h1>
 
-<div class="calendrier" id="calendrier"></div>
+
+
+<div id="Calendrier"></div>
+
+
+
 
 <script>
-const noms = [
-  "Annie-Claude", "Anne-Laure", "Brigitte", "Denise", "Élise", "Emmanuelle",
-  "Fatima", "Guillemette", "Julie", "Karima", "Laure", "Loïc",
-  "Marc", "Michelle", "Murielle", "Nathalie", "Nicole", "Pascale",
-  "Roxane", "Sidonie", "Sylvie", "Valérie", "EDM", "🎅 Un dernier mot"
+
+const Messages = [
+
+  "Annie-Claude : Merci pour ton humour et ta bonne humeur contagieuse 🎄",
+
+  "Anne-Laure : Merci pour ton calme et ta bienveillance 💫",
+
+  "Brigitte : Merci pour ton écoute et ton professionnalisme 🌟",
+
+  "Denise : Pause bien-être – être-toi, respire, profite du moment 🌸",
+
+  "Élise : Ton énergie est un vrai rayon de soleil ☀️",
+
+  "Emmanuelle : Merci pour ton soutien et ton sourire au quotidien 💛",
+
+  "Fatima : Merci pour ta douceur et ton attention 🌷",
+
+  "Guillemette : Merci pour ta créativité et ton imagination 🎨",
+
+  "Julie : Merci pour ta rigueur et ton efficacité 💪",
+
+  "Karima : Merci pour ton humour et ta bonne humeur 😄",
+
+  "Laure : Merci pour ta joie de vivre 🌼",
+
+  "Loïc : Merci pour ta patience et ton aide précieuse 🙌",
+
+  "Marc : Merci pour ton calme et ton professionnalisme 💼",
+
+  "Michelle : Merci pour ton sourire et ta gentillesse 💐",
+
+  "Murielle : Merci pour ta présence et ton soutien 🤗",
+
+  "Nathalie : Merci pour ton écoute et ta générosité 💖",
+
+  "Nicole : Merci pour ton expérience et ta sagesse 🌻",
+
+  "Pascale : Merci pour ton attention et ta disponibilité 💬",
+
+  "Roxane : Merci pour ton dynamisme et ton enthousiasme 🎇",
+
+  "Sidonie : Merci pour ta gentillesse et ton humour 😍",
+
+  "Sylvie : Merci pour ton énergie et le bien-être que tu transmets 💆‍♀️",
+
+  "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧩",
+
+  "EDM : Joyeux Noël à toute l’équipe 🎅 Merci pour votre solidarité 🎁",
+
+  "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ❤️"
+
 ];
 
-const messages = [
-  "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
-  "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-  "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-  "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-  "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-  "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-  "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
-  "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
-  "Julie : Laisse un post-it positif sur un écran📝",
-  "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
-  "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-  "Loïc : Bienvenue à l’école des métiers 🎉",
-  "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-  "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-  "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-  "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-  "Nicole : 😄",
-  "Pascale : Garde le sourire, le meilleur reste à venir 🌈",
-  "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-  "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-  "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-  "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-  "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄",
-  "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-];
 
-const calendrier = document.getElementById("calendrier");
-const aujourdHui = new Date();
 
-noms.forEach((nom, i) => {
-  const caseDiv = document.createElement("div");
-  caseDiv.classList.add("case");
-  caseDiv.textContent = nom;
 
-  caseDiv.addEventListener("click", () => {
-    // Pour tester maintenant, on désactive la restriction de date :
-    // Tu pourras la réactiver en décembre si tu veux 😉
-    alert(messages[i]);
-  });
+const Calendrier = document.getElementById("Calendrier");
 
-  calendrier.appendChild(caseDiv);
-});
+const date = new Date();
+
+const mois = date.getMonth(); // 0 = janvier, 11 = décembre
+
+const jour = date.getDate();  // jour du mois
+
+
+
+
+for (let i = 0; i < Messages.length; i++) {
+
+  const boite = document.createElement("div");
+
+  boite.classList.add("affaire");
+
+
+
+
+  const nom = Messages[i].split(":")[0];
+
+  boite.textContent = nom;
+
+
+
+
+  // Si on est en décembre
+
+  if (mois === 11) {
+
+    if (i + 1 <= jour) {
+
+      // Cases ouvertes (jours passés et jour actuel)
+
+      boite.style.backgroundColor = "#ff66b2";
+
+      boite.style.cursor = "pointer";
+
+      boite.onclick = () => {
+
+        boite.classList.add("ouvert");
+
+        setTimeout(() => {
+
+          alert(Messages[i]);
+
+        }, 400); // laisse le temps à l’animation avant d’afficher le message
+
+      };
+
+    } else {
+
+      // Cases futures : verrouillées
+
+      boite.classList.add("fermee");
+
+      boite.onclick = () => {
+
+        alert("🤫 Patience... cette case s’ouvrira le " + (i + 1) + " décembre 🎁");
+
+      };
+
+    }
+
+  } else {
+
+    // Si on n’est pas encore en décembre
+
+    boite.classList.add("fermee");
+
+    boite.onclick = () => {
+
+      alert("🎅 Le calendrier magique s’ouvrira le 1er décembre !");
+
+    };
+
+  }
+
+
+
+
+  Calendrier.appendChild(boite);
+
+}
+
 </script>
 
-</body>
-</html>
-
+  
