@@ -1,122 +1,238 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calendrier de l’Avent magique 🎄</title>
-  <style>
-    body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: radial-gradient(circle at top, #001f3f, #000);
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
 
-    h1 {
-      font-size: 2em;
-      text-shadow: 0 0 15px #ff9ed1, 0 0 25px #ff69b4;
-      animation: scintillement 2s infinite alternate;
-      margin-top: 30px;
-    }
+	<html lang="fr">
 
-    @keyframes scintillement {
-      from { text-shadow: 0 0 10px #ff9ed1; }
-      to { text-shadow: 0 0 25px #ff69b4, 0 0 45px #ff69b4; }
-    }
+	<head>
 
-    #calendrier {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 15px;
-      justify-items: center;
-      max-width: 600px;
-      margin: 40px auto;
-    }
+	  <meta charset="UTF-8">
 
-    .case {
-      width: 80px;
-      height: 80px;
-      background-color: #ff9ed1;
-      color: white;
-      font-size: 1.5em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s;
-    }
+	  <title>L’avent magique de l’EDM</title>
 
-    .case:hover {
-      background-color: #ffc1e3;
-      transform: scale(1.05);
-    }
+	  <style>
 
-    /* ✨ Animation d’ouverture */
-    @keyframes ouverture {
-      0% { transform: scale(1); background-color: #ff9ed1; }
-      50% { transform: scale(1.2); background-color: #ffe4f0; }
-      100% { transform: scale(1); background-color: #ff9ed1; }
-    }
+	    body {
 
-    .ouverte {
-      animation: ouverture 0.6s ease;
-    }
-  </style>
-</head>
-<body>
-  <h1>🎄 L’avent magique de l’EDM 🎁</h1>
-  <div id="calendrier"></div>
+	      font-family: 'Comic Sans MS', cursive, sans-serif;
 
-  <script>
-    const cal = document.getElementById("calendrier");
-    const aujourdHui = new Date().getDate(); // jour du mois
-    const messages = {
-      1: "Joyeux début de l’avent ! 🌟",
-      2: "Un sourire vaut mille cadeaux 😊",
-      3: "Prends un chocolat chaud ☕",
-      4: "Tu es magique aujourd’hui ✨",
-      5: "Petite pause douceur 🍪",
-      6: "C’est la Saint-Nicolas 🎅",
-      7: "Week-end qui approche 🎉",
-      8: "Une pensée positive 💖",
-      9: "Continue à briller 🌟",
-      10: "Petit bonheur du jour 🎁",
-      11: "Fais-toi un compliment 💐",
-      12: "Presque la moitié 🎄",
-      13: "Courage pour la semaine 💪",
-      14: "Un sourire pour toi 😄",
-      15: "Petite danse de Noël 💃",
-      16: "Tu es formidable 🌟",
-      17: "Week-end magique ✨",
-      18: "Un chocolat, deux sourires 🍫",
-      19: "Presque Noël 🎅🎁",
-      20: "Ambiance cocooning 🕯️",
-      21: "J-3 avant le réveillon 🎄",
-      22: "Tu mérites plein de bonheur 💕",
-      23: "C’est demain 🎅",
-      24: "Joyeux Noël !!! 🎁🎄✨"
-    };
+	      background-color: #002b46;
 
-    for (let i = 1; i <= 24; i++) {
-      const box = document.createElement("div");
-      box.className = "case";
-      box.textContent = i;
+	      color: white;
 
-      if (i <= aujourdHui) {
-        box.onclick = () => {
-          box.classList.add("ouverte");
-          alert(messages[i] || "Joyeux Avent !");
-          setTimeout(() => box.classList.remove("ouverte"), 700);
-        };
-      } else {
-        box.onclick = () => alert("Patience... ce n’est pas encore le jour " + i + " 🎁");
-      }
+	      text-align: center;
 
-      cal.appendChild(box);
-    }
-  </script>
-</body>
-</html>
+	    }
+
+	
+	
+
+	    h1 {
+
+	      font-size: 2em;
+
+	      margin-top: 20px;
+
+	      color: #fff;
+
+	      text-shadow: 0 0 10px #ff77ff, 0 0 20px #ff77ff;
+
+	      animation: scintillant 1.5s infinite alternate;
+
+	    }
+
+	
+	
+
+	    @keyframes scintillant {
+
+	      from { text-shadow: 0 0 10px #ff77ff, 0 0 20px #ff77ff; }
+
+	      to { text-shadow: 0 0 20px #ffff77, 0 0 40px #ffff77; }
+
+	    }
+
+	
+	
+
+	    .calendrier {
+
+	      display: grid;
+
+	      grid-template-columns: repeat(6, 120px);
+
+	      grid-gap: 15px;
+
+	      justify-content: center;
+
+	      margin-top: 30px;
+
+	    }
+
+	
+	
+
+	    .case {
+
+	      background-color: #ff66a3;
+
+	      color: white;
+
+	      border-radius: 10px;
+
+	      font-size: 1em;
+
+	      display: flex;
+
+	      align-items: center;
+
+	      justify-content: center;
+
+	      cursor: pointer;
+
+	      padding: 10px;
+
+	      text-align: center;
+
+	      transition: transform 0.2s, background-color 0.3s;
+
+	    }
+
+	
+	
+
+	    .case:hover {
+
+	      background-color: #ff99cc;
+
+	      transform: scale(1.1);
+
+	    }
+
+	  </style>
+
+	</head>
+
+	<body>
+
+	  <h1>🎄 L’avent magique de l’EDM 🎁</h1>
+
+	  <div class="calendrier" id="calendrier"></div>
+
+	
+	
+
+	  <script>
+
+	    const cases = [
+
+	      { nom: "Annie-Claude", message: "Laisse ton énergie positive briller autour de toi 🌟" },
+
+	      { nom: "Anne-Laure", message: "Envoie un message positif sur le Teams de l’équipe 💌" },
+
+	      { nom: "Brigitte", message: "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓" },
+
+	      { nom: "Denise", message: "Pause bien-être – étire-toi, respire, profite du moment 🌸" },
+
+	      { nom: "Élise", message: "Tu inspires confiance par ton attitude posée et professionnelle 🤝" },
+
+	      { nom: "Emmanuelle", message: "Ton expertise est précieuse et ta collaboration également 💼" },
+
+	      { nom: "Fatima", message: "Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊" },
+
+	      { nom: "Guillemette", message: "Ton super pouvoir du jour — faire rire quelqu’un 😄" },
+
+	      { nom: "Julie", message: "Laisse un post-it positif sur un écran 📝" },
+
+	      { nom: "Karima", message: "Tu es une belle source d’énergie dans l’équipe ☀️" },
+
+	      { nom: "Laure", message: "Nous te remercions sincèrement pour ta collaboration 🤗" },
+
+	      { nom: "Loïc", message: "Bienvenue à l’école des métiers 🎉" },
+
+	      { nom: "Marc", message: "Ton sens de l’analyse est un vrai atout pour notre équipe 🔍" },
+
+	      { nom: "Michelle", message: "Tu fais preuve d’une belle curiosité intellectuelle 📚" },
+
+	      { nom: "Murielle", message: "Tu es toujours prête à donner un coup de main à tes collègues 💪" },
+
+	      { nom: "Nathalie", message: "Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖" },
+
+	      { nom: "Nicole", message: "😄" },
+
+	      { nom: "Pascale", message: "Garde le sourire, le meilleur reste à venir 🌈" },
+
+	      { nom: "Roxane", message: "Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺" },
+
+	      { nom: "Sidonie", message: "Tes efforts d’aujourd’hui sont les réussites de demain 🚀" },
+
+	      { nom: "Sylvie", message: "Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞" },
+
+	      { nom: "Valérie", message: "Ta capacité à résoudre des problèmes complexes est admirable 🧠" },
+
+	      { nom: "EDM", message: "Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄" },
+
+	      { nom: "🎅 Un dernier mot", message: "Que cette fin d’année soit remplie de sourires et de chaleur ✨" }
+
+	    ];
+
+	
+	
+
+	    const calendrier = document.getElementById("calendrier");
+
+	    const dateAujourdhui = new Date();
+
+	    const jour = dateAujourdhui.getDate();
+
+	    const mois = dateAujourdhui.getMonth();
+
+	
+	
+
+	    cases.forEach((item, index) => {
+
+	      const caseDiv = document.createElement("div");
+
+	      caseDiv.className = "case";
+
+	      caseDiv.textContent = item.nom;
+
+	
+	
+
+	      caseDiv.onclick = () => {
+
+	        if (mois === 11 && index + 1 <= jour) {
+
+	          alert(`${item.nom} 🎁\n\n${item.message}`);
+
+	        } else if (mois !== 11) {
+
+	          alert("Patience... le calendrier ne s’ouvre qu’en décembre 🎁");
+
+	        } else {
+
+	          alert(`Patience... ce n’est pas encore le jour ${index + 1} 🎁`);
+
+	        }
+
+	      };
+
+	
+	
+
+	      calendrier.appendChild(caseDiv);
+
+	    });
+
+	  </script>
+
+	</body>
+
+	</html>
+
+
+     
+    
+    
+
+      
