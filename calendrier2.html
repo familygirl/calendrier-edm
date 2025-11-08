@@ -1,255 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendrier de l’Avent EDM 🎄</title>
 
 <style>
+  body {
+    background-color: #fff8f0;
+    font-family: "Comic Sans MS", cursive;
+    text-align: center;
+  }
+
+  h1 {
+    color: #d63384;
+    text-shadow: 2px 2px 4px #fff;
+    margin-top: 20px;
+  }
+
+  #Calendrier {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 30px auto;
+    max-width: 700px;
+  }
 
   .affaire {
-
     width: 120px;
-
     height: 70px;
-
     margin: 10px;
-
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 10px;
-
     font-weight: bold;
-
     color: white;
-
     font-size: 16px;
-
+    background-color: gray;
+    opacity: 0.8;
     transition: transform 0.4s ease, background-color 0.4s ease;
-
   }
-
-
-
 
   .affaire:hover {
-
     transform: scale(1.05);
-
   }
-
-
-
 
   /* Animation d’ouverture magique */
-
   @keyframes ouverture {
-
     0% {
-
       transform: rotateY(0deg);
-
       background-color: #ff66b2;
-
     }
-
     50% {
-
       transform: rotateY(90deg);
-
       background-color: gold;
-
       color: black;
-
     }
-
     100% {
-
       transform: rotateY(0deg);
-
       background-color: #ff66b2;
-
       color: white;
-
     }
-
   }
-
-
-
 
   .ouvert {
-
     animation: ouverture 0.8s ease;
-
   }
-
-
-
 
   /* Cases verrouillées */
-
   .fermee {
-
     background-color: gray !important;
-
     opacity: 0.7;
-
     cursor: not-allowed;
-
   }
-
 </style>
+</head>
 
+<body>
+  <h1>🎁 Calendrier de l’Avent EDM 🎁</h1>
+  <div id="Calendrier"></div>
 
-
-
-<div id="Calendrier"></div>
-
-
-
+  <!-- 🔔 Son de clochette -->
+  <audio id="clochette" src="https://cdn.pixabay.com/audio/2022/03/15/audio_6efef1d8c1.mp3" preload="auto"></audio>
 
 <script>
-
 const Messages = [
-
   "Annie-Claude : Merci pour ton humour et ta bonne humeur contagieuse 🎄",
-
   "Anne-Laure : Merci pour ton calme et ta bienveillance 💫",
-
   "Brigitte : Merci pour ton écoute et ton professionnalisme 🌟",
-
-  "Denise : Pause bien-être – être-toi, respire, profite du moment 🌸",
-
+  "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
   "Élise : Ton énergie est un vrai rayon de soleil ☀️",
-
   "Emmanuelle : Merci pour ton soutien et ton sourire au quotidien 💛",
-
   "Fatima : Merci pour ta douceur et ton attention 🌷",
-
   "Guillemette : Merci pour ta créativité et ton imagination 🎨",
-
   "Julie : Merci pour ta rigueur et ton efficacité 💪",
-
   "Karima : Merci pour ton humour et ta bonne humeur 😄",
-
   "Laure : Merci pour ta joie de vivre 🌼",
-
   "Loïc : Merci pour ta patience et ton aide précieuse 🙌",
-
   "Marc : Merci pour ton calme et ton professionnalisme 💼",
-
   "Michelle : Merci pour ton sourire et ta gentillesse 💐",
-
   "Murielle : Merci pour ta présence et ton soutien 🤗",
-
   "Nathalie : Merci pour ton écoute et ta générosité 💖",
-
   "Nicole : Merci pour ton expérience et ta sagesse 🌻",
-
   "Pascale : Merci pour ton attention et ta disponibilité 💬",
-
   "Roxane : Merci pour ton dynamisme et ton enthousiasme 🎇",
-
   "Sidonie : Merci pour ta gentillesse et ton humour 😍",
-
   "Sylvie : Merci pour ton énergie et le bien-être que tu transmets 💆‍♀️",
-
   "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧩",
-
   "EDM : Joyeux Noël à toute l’équipe 🎅 Merci pour votre solidarité 🎁",
-
   "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ❤️"
-
 ];
 
-
-
-
 const Calendrier = document.getElementById("Calendrier");
-
+const clochette = document.getElementById("clochette");
 const date = new Date();
-
 const mois = date.getMonth(); // 0 = janvier, 11 = décembre
-
 const jour = date.getDate();  // jour du mois
 
-
-
-
 for (let i = 0; i < Messages.length; i++) {
-
   const boite = document.createElement("div");
-
   boite.classList.add("affaire");
 
-
-
-
   const nom = Messages[i].split(":")[0];
-
   boite.textContent = nom;
 
-
-
-
   // Si on est en décembre
-
   if (mois === 11) {
-
     if (i + 1 <= jour) {
-
       // Cases ouvertes (jours passés et jour actuel)
-
       boite.style.backgroundColor = "#ff66b2";
-
       boite.style.cursor = "pointer";
-
       boite.onclick = () => {
-
         boite.classList.add("ouvert");
-
+        clochette.currentTime = 0;
+        clochette.play();
         setTimeout(() => {
-
           alert(Messages[i]);
-
-        }, 400); // laisse le temps à l’animation avant d’afficher le message
-
+        }, 500);
       };
-
     } else {
-
       // Cases futures : verrouillées
-
       boite.classList.add("fermee");
-
       boite.onclick = () => {
-
         alert("🤫 Patience... cette case s’ouvrira le " + (i + 1) + " décembre 🎁");
-
       };
-
     }
-
   } else {
-
     // Si on n’est pas encore en décembre
-
     boite.classList.add("fermee");
-
     boite.onclick = () => {
-
       alert("🎅 Le calendrier magique s’ouvrira le 1er décembre !");
-
     };
-
   }
 
-
-
-
   Calendrier.appendChild(boite);
-
 }
-
 </script>
+</body>
+</html>
+
 
   
+ 
+
+ 
+
