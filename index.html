@@ -1,123 +1,20 @@
+
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>L’avent magique de l’EDM 🎁</title>
-<style>
-  body {
-    background: linear-gradient(to bottom right, #0b1522, #1c2b4a);
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    text-align: center;
-    color: white;
-  }
-
-  h1 {
-    margin-top: 20px;
-    font-size: 2.3em;
-    color: #fff;
-    text-shadow: 0 0 10px gold, 0 0 20px orange;
-    animation: scintille 3s infinite alternate;
-  }
-
-  @keyframes scintille {
-    from { text-shadow: 0 0 10px gold, 0 0 20px orange; }
-    to { text-shadow: 0 0 25px gold, 0 0 45px yellow; }
-  }
-
-  #calendrier {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 18px;
-    justify-items: center;
-    align-items: center;
-    max-width: 850px;
-    margin: 50px auto;
-  }
-
-  .case {
-    width: 130px;
-    height: 90px;
-    background-color: hotpink;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    box-shadow: 0 0 10px rgba(255,255,255,0.2);
-    transition: all 0.3s ease;
-  }
-
-  /* 🌟 Effet doré magique au survol */
-  .case:hover {
-    background-color: gold;
-    color: #222;
-    box-shadow: 0 0 20px gold, 0 0 40px gold;
-    transform: scale(1.05);
-  }
-</style>
-</head>
-<body>
-  <h1>🎄 L’avent magique de l’EDM 🎁</h1>
-  <div id="calendrier"></div>
-
-  <script>
-    const messages = [
-      "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
-      "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-      "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-      "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-      "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-      "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-      "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
-      "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
-      "Julie : Laisse un post-it positif sur un écran📝",
-      "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
-      "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-      "Loïc : Bienvenue à l’école des métiers 🎉",
-      "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-      "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-      "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-      "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-      "Nicole : 😄",
-      "Pascale : Garde le sourire, le meilleur reste à venir 🌈",
-      "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-      "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-      "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-      "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-      "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄",
-      "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-    ];
-
-    const calendrier = document.getElementById("calendrier");
-    const date = new Date();
-    const mois = date.getMonth(); // 0 = janvier, 11 = décembre
-
-    for (let i = 0; i < messages.length; i++) {
-      const box = document.createElement("div");
-      box.classList.add("case");
-      const nom = messages[i].split(":")[0];
-      box.textContent = nom;
-
-      box.onclick = () => {
-        if (mois === 11) { // décembre
-          alert(messages[i]);
-        } else {
-          alert("Patience... le calendrier ne s'ouvre qu'en décembre 🎁");
-        }
-      };
-      calendrier.appendChild(box);
-    }
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=calendrier2.html">
+    <title>Redirection...</title>
+  </head>
+  <body>
+    <p>Redirection vers le calendrier magique... 🎁</p>
+  </body>
+</html>
 
 
+
+
+
+   
     
- 
-     
-     
+
