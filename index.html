@@ -3,77 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calendrier de l’Avent magique de l'EDM 🎁</title>
+  <title>Calendrier de l’Avent magique 🎄</title>
   <style>
     body {
-      background: linear-gradient(to bottom, #001f3f, #003366);
-      min-height: 100vh;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: radial-gradient(circle at top, #001f3f, #000);
+      color: white;
+      text-align: center;
       margin: 0;
       padding: 0;
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      text-align: center;
     }
 
-    h1.scintillant {
-      font-size: 2.5em;
-      margin: 20px 0;
-      color: #fff;
-      text-shadow: 0 0 10px #fff, 0 0 20px #ff69b4, 0 0 30px #ff1493;
+    h1 {
+      font-size: 2em;
+      text-shadow: 0 0 15px #ff9ed1, 0 0 25px #ff69b4;
+      animation: scintillement 2s infinite alternate;
+      margin-top: 30px;
     }
 
-    .calendrier {
+    @keyframes scintillement {
+      from { text-shadow: 0 0 10px #ff9ed1; }
+      to { text-shadow: 0 0 25px #ff69b4, 0 0 45px #ff69b4; }
+    }
+
+    #calendrier {
       display: grid;
-      grid-template-columns: repeat(6, 100px);
-      grid-gap: 15px;
-      justify-content: center;
-      padding: 20px;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 15px;
+      justify-items: center;
+      max-width: 600px;
+      margin: 40px auto;
     }
 
     .case {
-      width: 100px;
-      height: 100px;
-      background-color: #ff69b4;
+      width: 80px;
+      height: 80px;
+      background-color: #ff9ed1;
       color: white;
-      font-size: 2em;
+      font-size: 1.5em;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.2s, background-color 0.3s;
+      transition: transform 0.2s, background-color 0.2s;
     }
 
     .case:hover {
-      transform: scale(1.1);
-      background-color: #ff1493;
+      background-color: #ffc1e3;
+      transform: scale(1.05);
+    }
+
+    /* ✨ Animation d’ouverture */
+    @keyframes ouverture {
+      0% { transform: scale(1); background-color: #ff9ed1; }
+      50% { transform: scale(1.2); background-color: #ffe4f0; }
+      100% { transform: scale(1); background-color: #ff9ed1; }
+    }
+
+    .ouverte {
+      animation: ouverture 0.6s ease;
     }
   </style>
 </head>
 <body>
-  <h1 class="scintillant">🎄 L’avent magique de l’EDM 🎁</h1>
-
-  <div class="calendrier" id="calendrier"></div>
+  <h1>🎄 L’avent magique de l’EDM 🎁</h1>
+  <div id="calendrier"></div>
 
   <script>
-    const calendrier = document.getElementById("calendrier");
-    const aujourdHui = new Date().getDate();
+    const cal = document.getElementById("calendrier");
+    const aujourdHui = new Date().getDate(); // jour du mois
+    const messages = {
+      1: "Joyeux début de l’avent ! 🌟",
+      2: "Un sourire vaut mille cadeaux 😊",
+      3: "Prends un chocolat chaud ☕",
+      4: "Tu es magique aujourd’hui ✨",
+      5: "Petite pause douceur 🍪",
+      6: "C’est la Saint-Nicolas 🎅",
+      7: "Week-end qui approche 🎉",
+      8: "Une pensée positive 💖",
+      9: "Continue à briller 🌟",
+      10: "Petit bonheur du jour 🎁",
+      11: "Fais-toi un compliment 💐",
+      12: "Presque la moitié 🎄",
+      13: "Courage pour la semaine 💪",
+      14: "Un sourire pour toi 😄",
+      15: "Petite danse de Noël 💃",
+      16: "Tu es formidable 🌟",
+      17: "Week-end magique ✨",
+      18: "Un chocolat, deux sourires 🍫",
+      19: "Presque Noël 🎅🎁",
+      20: "Ambiance cocooning 🕯️",
+      21: "J-3 avant le réveillon 🎄",
+      22: "Tu mérites plein de bonheur 💕",
+      23: "C’est demain 🎅",
+      24: "Joyeux Noël !!! 🎁🎄✨"
+    };
 
     for (let i = 1; i <= 24; i++) {
-      const caseJour = document.createElement("div");
-      caseJour.classList.add("case");
-      caseJour.textContent = i;
+      const box = document.createElement("div");
+      box.className = "case";
+      box.textContent = i;
 
       if (i <= aujourdHui) {
-        caseJour.onclick = () => alert("🎁 Voici la surprise du jour " + i + " !");
+        box.onclick = () => {
+          box.classList.add("ouverte");
+          alert(messages[i] || "Joyeux Avent !");
+          setTimeout(() => box.classList.remove("ouverte"), 700);
+        };
       } else {
-        caseJour.onclick = () => alert("Patience... ce n’est pas encore le jour " + i + " 🎁");
+        box.onclick = () => alert("Patience... ce n’est pas encore le jour " + i + " 🎁");
       }
 
-      calendrier.appendChild(caseJour);
+      cal.appendChild(box);
     }
-
-    document.querySelector("h1").classList.add("scintillant");
   </script>
 </body>
 </html>
-
