@@ -1,182 +1,144 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendrier de l’Avent EDM 2025 🎄</title>
-<style>
-  body {
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(to bottom, #b6d0e2, #f4f9ff);
-    text-align: center;
-    margin: 0;
-    padding: 0;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendrier de l’Avent EDM 2025 🎄</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", cursive;
+      text-align: center;
+      background: linear-gradient(to bottom, #cbe7f5, #f8f8f8);
+      color: #333;
+    }
 
-  h1 {
-    color: #b30000;
-    text-shadow: 2px 2px 4px #fff;
-    animation: scintille 2s infinite;
-  }
+    h1 {
+      color: #b30000;
+      margin-top: 20px;
+    }
 
-  @keyframes scintille {
-    0%, 100% { text-shadow: 0 0 10px #fff; }
-    50% { text-shadow: 0 0 20px gold; }
-  }
+    .countdown {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
 
-  #countdown {
-    font-size: 20px;
-    margin: 10px 0 20px;
-    color: #003366;
-  }
+    .calendrier {
+      display: grid;
+      grid-template-columns: repeat(6, 100px);
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+    }
 
-  .calendrier {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    width: 90%;
-    max-width: 700px;
-    margin: 0 auto;
-  }
+    .case {
+      background-color: #ffb6c1;
+      border-radius: 10px;
+      padding: 20px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+      font-weight: bold;
+    }
 
-  .case {
-    background: #ccc;
-    border-radius: 10px;
-    height: 90px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: not-allowed;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    position: relative;
-  }
+    .case.locked {
+      background-color: #d3d3d3;
+      color: #777;
+      cursor: not-allowed;
+    }
 
-  .case.ouverte {
-    background: #fff8dc;
-    color: #b30000;
-    cursor: default;
-    transform: scale(1.05);
-    box-shadow: 0 0 10px gold;
-  }
-
-  .case.ouvrable {
-    background: #d40000;
-    color: white;
-    cursor: pointer;
-  }
-
-  .message {
-    display: none;
-    font-size: 18px;
-    margin-top: 20px;
-    color: #003366;
-  }
-
-  .message.actif {
-    display: block;
-    animation: fadeOut 20s forwards;
-  }
-
-  @keyframes fadeOut {
-    0% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { opacity: 0; display: none; }
-  }
-</style>
+    .case:hover:not(.locked) {
+      transform: scale(1.05);
+      background-color: #ff8fab;
+    }
+  </style>
 </head>
-
 <body>
   <h1>🎅 Calendrier de l’Avent EDM 2025 🎄</h1>
-  <div id="countdown"></div>
+  <div class="countdown" id="countdown">⏰ Chargement du compte à rebours...</div>
   <div class="calendrier" id="calendrier"></div>
-  <p id="message" class="message"></p>
 
-<script>
-const messages = [
-  "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
-  "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-  "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-  "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-  "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-  "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-  "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
-  "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
-  "Julie : Laisse un post-it positif sur un écran📝",
-  "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
-  "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-  "Loïc : Bienvenue à l’école des métiers 🎉",
-  "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-  "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-  "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-  "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-  "Nicole : 😄",
-  "Pascale : Garde le sourire, le meilleur reste à venir 🌈",
-  "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-  "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-  "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-  "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-  "EDM : Joyeux Noël à toute l’équipe. Merci pour votre solidarité 🎄",
-  "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-];
+  <script>
+    // --- Configuration des prénoms et messages ---
+    const messages = [
+      "Annie-Claude : Laisse ton énergie positive briller autour de toi ✨",
+      "Anne-Laure : Un sourire vaut mille mots 🌸",
+      "Brigitte : Aujourd’hui, pense à toi 💖",
+      "Denise : Pause bien-être – respire, profite du moment 🌷",
+      "Élise : Que ta journée soit remplie de douceur 🍀",
+      "Emmanuelle : Tu apportes la lumière partout où tu vas ☀️",
+      "Fatima : Un petit geste gentil fait toute la différence 💕",
+      "Guillemette : Laisse la magie de Noël t’envelopper 🎄",
+      "Julie : Crois en toi, chaque jour 🌟",
+      "Karima : Un mot gentil change une journée 🌹",
+      "Laure : Sois fière de ton parcours 💪",
+      "Loïc : Souris à la vie 😄",
+      "Marc : Ton enthousiasme est contagieux 🎁",
+      "Michelle : Ta bienveillance illumine ton entourage 💛",
+      "Murielle : Un instant pour toi aujourd’hui ☕",
+      "Nathalie : Merci pour ta bonne humeur constante 🌞",
+      "Nicole : Tu rends le monde plus doux 💐",
+      "Pascale : Ton optimisme donne des ailes 🕊️",
+      "Roxane : Continue à inspirer autour de toi 🌈",
+      "Sidonie : Un petit moment de bonheur rien que pour toi 🎶",
+      "Sylvie : Merci pour ton énergie et ton bien-être 💖",
+      "Valérie : Ta capacité à résoudre les problèmes est admirable 💡",
+      "EDM : Joyeux Noël à toute l’équipe 🎅🎁",
+      "Un dernier mot : Que cette fin d’année soit remplie de chaleur ❤️"
+    ];
 
-const calendrier = document.getElementById("calendrier");
-const messageEl = document.getElementById("message");
-const today = new Date();
-const day = today.getMonth() === 11 ? today.getDate() : 0; // active seulement en décembre
+    const calendrier = document.getElementById("calendrier");
+    const countdownEl = document.getElementById("countdown");
+    const maintenant = new Date();
+    const annee = 2025;
+    const ouverture = new Date(annee, 11, 1); // 1er décembre (mois 11)
 
-for (let i = 1; i <= 24; i++) {
-  const caseDiv = document.createElement("div");
-  caseDiv.classList.add("case");
-  caseDiv.textContent = i;
+    // --- Compte à rebours ---
+    function updateCountdown() {
+      const maintenant = new Date();
+      const diff = ouverture - maintenant;
 
-  if (i <= day && day > 0) {
-    caseDiv.classList.add("ouvrable");
-    caseDiv.addEventListener("click", () => ouvrirCase(i, caseDiv));
-  } else if (day === i) {
-    caseDiv.classList.add("ouvrable");
-    caseDiv.addEventListener("click", () => ouvrirCase(i, caseDiv));
-  }
-  calendrier.appendChild(caseDiv);
-}
+      if (diff <= 0) {
+        countdownEl.textContent = "🎉 Le calendrier est ouvert !";
+        return;
+      }
 
-function ouvrirCase(num, caseDiv) {
-  caseDiv.classList.add("ouverte");
-  messageEl.textContent = messages[num - 1];
-  messageEl.classList.add("actif");
-  setTimeout(() => messageEl.classList.remove("actif"), 20000);
-}
-
-// Compte à rebours
-const countdown = document.getElementById("countdown");
-const startDate = new Date(today.getFullYear(), 11, 1); // 1er décembre
-if (today < startDate) {
-  function updateCountdown() {
-    const now = new Date();
-    const diff = startDate - now;
-    if (diff <= 0) {
-      countdown.textContent = "✨ Le calendrier est ouvert ! ✨";
-    } else {
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const jours = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const heures = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      countdown.textContent = `🕰️ Le calendrier s’ouvre dans ${days} j ${hours} h ${minutes} m ${seconds} s`;
+      const secondes = Math.floor((diff / 1000) % 60);
+
+      countdownEl.textContent = `⏰ Le calendrier s’ouvre dans ${jours} j ${heures} h ${minutes} m ${secondes} s`;
     }
-  }
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-} else {
-  countdown.textContent = "✨ Le calendrier est ouvert ! ✨";
-}
-</script>
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // --- Création des cases ---
+    const aujourdHui = new Date();
+    const jourActuel = aujourdHui.getDate();
+    const moisActuel = aujourdHui.getMonth();
+
+    for (let i = 0; i < 24; i++) {
+      const caseEl = document.createElement("div");
+      caseEl.classList.add("case");
+      caseEl.textContent = messages[i].split(":")[0];
+
+      // 🔒 Si ce n’est pas encore décembre ou jour < i+1 → verrouillé
+      if (moisActuel < 11 || (moisActuel === 11 && jourActuel < i + 1)) {
+        caseEl.classList.add("locked");
+      }
+
+      caseEl.onclick = () => {
+        if (caseEl.classList.contains("locked")) {
+          alert("⏳ Patience... cette case s’ouvrira le " + (i + 1) + " décembre !");
+        } else {
+          alert(messages[i]);
+        }
+      };
+
+      calendrier.appendChild(caseEl);
+    }
+  </script>
 </body>
 </html>
-
-  
-  
-
-
 
 
