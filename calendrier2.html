@@ -122,14 +122,13 @@
       const currentMonth = today.getMonth();
 
       if (today < startDate) {
-        alert("Le calendrier ne s’ouvre qu’à partir du 1er décembre 🎅");
-      } else if (currentMonth === 11 && currentDay >= day) {
-        div.classList.add("animated"); // Ajoute l’effet d’illumination ✨
-        alert(msg);
-        setTimeout(() => div.classList.remove("animated"), 1000);
-      } else {
-        alert("Patience… cette case s’ouvrira le " + day + " décembre 🎁");
-      }
+        // --- MODE TEST : toutes les cases sont accessibles ---
+div.classList.add("animated");
+alert(msg);
+setTimeout(() => div.classList.remove("animated"), 1000);
+
+
+
     });
     calendar.appendChild(div);
   });
@@ -177,6 +176,7 @@
 
 </body>
 </html>
+
 
 
 
