@@ -58,8 +58,8 @@
       transform: scale(1.05);
     }
 
-    .day.locked {
-      background-color: #ccc;
+    .locked {
+      background-color: #ccc !important;
       color: #666;
       cursor: not-allowed;
     }
@@ -68,7 +68,7 @@
 <body>
 
   <h1>🎅 Calendrier de l’Avent EDM 2025 🎄</h1>
-  <p id="countdown">🕰️ Test en mode aperçu — toutes les cases sont cliquables ✨</p>
+  <p id="countdown"></p>
   <div class="calendrier" id="calendar"></div>
 
   <script>
@@ -100,21 +100,65 @@
     ];
 
     const calendar = document.getElementById("calendar");
+    const countdown = document.getElementById("countdown");
+
+    const startDate = new Date("2025-12-01T00:00:00");
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = startDate - now;
+
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        countdown.textContent = `🕰️ Le calendrier s’ouvre dans ${days} j ${hours} h ${minutes} m ${seconds} s`;
+      } else {
+        countdown.textContent = "🎁 Clique chaque jour sur ta case pour découvrir ton message magique ! ✨";
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
     messages.forEach((msg, index) => {
       const div = document.createElement("div");
       div.classList.add("day");
       div.textContent = msg.split(":")[0];
-      div.addEventListener("click", () => {
-        div.classList.add("animated");
-        alert(msg);
-        setTimeout(() => div.classList.remove("animated"), 800);
-      });
       calendar.appendChild(div);
+
+      const day = index + 1;
+
+      const today = new Date();
+      const currentDay = today.getDate();
+      const currentMonth = today.getMonth();
+
+      // Bloque si avant le 1er décembre
+      if (today < startDate) {
+        div.classList.add("locked");
+      } else if (currentMonth === 11 && day > currentDay) {
+        div.classList.add("locked");
+      }
+
+      div.addEventListener("click", () => {
+        const now = new Date();
+        const dayNow = now.getDate();
+        const monthNow = now.getMonth();
+
+        if (now < startDate) {
+          alert("⏳ Le calendrier ne s’ouvre qu’à partir du 1er décembre !");
+        } else if (monthNow === 11 && day > dayNow) {
+          alert("🎅 Patience ! Cette case s’ouvrira le " + day + " décembre 🎄");
+        } else {
+          div.classList.add("animated");
+          alert(msg);
+          setTimeout(() => div.classList.remove("animated"), 800);
+        }
+      });
     });
   </script>
 
 </body>
 </html>
 
- 
