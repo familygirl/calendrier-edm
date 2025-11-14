@@ -1,20 +1,184 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=calendrier2.html">
-    <title>Redirection...</title>
-  </head>
-  <body>
-    <p>Redirection vers le calendrier magique... 🎁</p>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8">
+<title>Calendrier de l'Avent 2025</title>
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f0f4f8;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 32px;
+        margin-bottom: 25px;
+        color: #B30000;
+    }
+
+    .calendar {
+        display: grid;
+        grid-template-columns: repeat(6, 150px);
+        gap: 15px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .day {
+        height: 120px;
+        background-color: #d62828;
+        color: white;
+        border-radius: 10px;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px;
+        text-align: center;
+        transition: transform 0.2s;
+        user-select: none;
+    }
+
+    /* Cases verrouillées (avant la date) */
+    .locked {
+        background-color: grey;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    /* Cases déjà ouvertes */
+    .opened {
+        background-color: #2a9d8f !important;
+    }
+
+    .day:hover:not(.locked) {
+        transform: scale(1.05);
+    }
+
+    /* Fenêtre du message */
+    #messageBox {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        width: 350px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        font-size: 18px;
+    }
+
+    #closeBtn {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #d62828;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>🎄 Calendrier de l'Avent de l’EDM – 2025 🎄</h1>
+
+<div class="calendar" id="calendar"></div>
+
+<!-- Fenêtre du message -->
+<div id="messageBox">
+    <div id="messageText"></div>
+    <button id="closeBtn">Fermer</button>
+</div>
+
+<script>
+// ---------------------------
+// 1) MESSAGES DU CALENDRIER
+// ---------------------------
+const messages = [
+  "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
+  "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
+  "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
+  "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
+  "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
+  "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
+  "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
+  "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
+  "Julie : Laisse un post-it positif sur un écran 📝",
+  "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
+  "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
+  "Loïc : Bienvenue à l’école des métiers 🎉",
+  "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
+  "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
+  "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
+  "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
+  "Nicole : 😄",
+  "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
+  "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
+  "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
+  "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
+  "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
+  "Yveline : Tes petits doigts de fée font des merveilles 😌",
+  "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
+];
+
+// ---------------------------
+// 2) CONSTRUCTION DES CASES
+// ---------------------------
+const calendar = document.getElementById("calendar");
+const today = new Date();
+const currentDay = today.getMonth() === 11 ? today.getDate() : 0; // Débloque seulement en décembre
+
+for (let i = 1; i <= 24; i++) {
+    const dayDiv = document.createElement("div");
+    dayDiv.classList.add("day");
+    dayDiv.textContent = messages[i - 1].split(":")[0]; // afficher prénom
+
+    // Verrouillage si la date est future
+    if (i > currentDay) {
+        dayDiv.classList.add("locked");
+    }
+
+    // Déjà ouvert → reste cliquable et vert
+    if (localStorage.getItem("opened_" + i)) {
+        dayDiv.classList.add("opened");
+    }
+
+    // Clic
+    dayDiv.addEventListener("click", () => {
+        if (dayDiv.classList.contains("locked")) return;
+
+        document.getElementById("messageText").textContent = messages[i - 1];
+        document.getElementById("messageBox").style.display = "block";
+
+        dayDiv.classList.add("opened");
+        localStorage.setItem("opened_" + i, "true");
+    });
+
+    calendar.appendChild(dayDiv);
+}
+
+// fermeture message
+document.getElementById("closeBtn").onclick = () => {
+    document.getElementById("messageBox").style.display = "none";
+};
+</script>
+
+</body>
+</html>
 
 
 
 
    
     
+
 
