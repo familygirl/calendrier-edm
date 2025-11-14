@@ -1,184 +1,267 @@
-
 <!DOCTYPE html>
+
 <html lang="fr">
+
 <head>
+
 <meta charset="UTF-8">
-<title>Calendrier de l'Avent 2025</title>
+
+<title>Calendrier de l'Avent – TEST</title>
 
 <style>
+
     body {
+
         font-family: Arial, sans-serif;
-        background: #f0f4f8;
+
+        background: #f7f2e8;
+
         text-align: center;
+
         margin: 0;
+
         padding: 20px;
+
     }
 
-    h1 {
-        font-size: 32px;
-        margin-bottom: 25px;
-        color: #B30000;
-    }
+    h1 { margin-bottom: 20px; }
+
+
+
 
     .calendar {
+
         display: grid;
-        grid-template-columns: repeat(6, 150px);
-        gap: 15px;
-        justify-content: center;
-        margin-top: 20px;
+
+        grid-template-columns: repeat(6, 1fr);
+
+        gap: 10px;
+
+        max-width: 900px;
+
+        margin: auto;
+
     }
+
+
+
 
     .day {
-        height: 120px;
-        background-color: #d62828;
-        color: white;
-        border-radius: 10px;
-        font-size: 18px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        transition: transform 0.2s;
-        user-select: none;
-    }
 
-    /* Cases verrouillées (avant la date) */
-    .locked {
-        background-color: grey;
-        cursor: not-allowed;
-        opacity: 0.6;
-    }
-
-    /* Cases déjà ouvertes */
-    .opened {
-        background-color: #2a9d8f !important;
-    }
-
-    .day:hover:not(.locked) {
-        transform: scale(1.05);
-    }
-
-    /* Fenêtre du message */
-    #messageBox {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
         background: white;
-        padding: 25px;
+
+        border: 2px solid #c79d63;
+
+        padding: 20px;
+
         border-radius: 10px;
-        width: 350px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.3);
-        font-size: 18px;
+
+        cursor: pointer;
+
+        font-weight: bold;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        height: 90px;
+
     }
 
-    #closeBtn {
-        margin-top: 15px;
-        padding: 10px 20px;
-        background-color: #d62828;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
+
+
+
+    .modal {
+
+        display: none;
+
+        position: fixed;
+
+        left: 0; top: 0;
+
+        width: 100%; height: 100%;
+
+        background: rgba(0,0,0,0.6);
+
+        justify-content: center;
+
+        align-items: center;
+
     }
+
+
+
+
+    .modal-content {
+
+        background: white;
+
+        padding: 20px;
+
+        border-radius: 12px;
+
+        width: 80%;
+
+        max-width: 400px;
+
+        text-align: center;
+
+        font-size: 18px;
+
+    }
+
+
+
+
+    .close {
+
+        cursor: pointer;
+
+        font-size: 20px;
+
+        float: right;
+
+    }
+
 </style>
 
 </head>
+
 <body>
 
-<h1>🎄 Calendrier de l'Avent de l’EDM – 2025 🎄</h1>
 
-<div class="calendar" id="calendar"></div>
 
-<!-- Fenêtre du message -->
-<div id="messageBox">
-    <div id="messageText"></div>
-    <button id="closeBtn">Fermer</button>
+
+<h1>🎁 Calendrier de l'Avent – TEST 🎁</h1>
+
+
+
+
+<div class="calendar"></div>
+
+
+
+
+<div id="modal" class="modal">
+
+  <div class="modal-content">
+
+    <span class="close" onclick="closeModal()">✖</span>
+
+    <p id="modalText"></p>
+
+  </div>
+
 </div>
 
+
+
+
 <script>
-// ---------------------------
-// 1) MESSAGES DU CALENDRIER
-// ---------------------------
+
 const messages = [
-  "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
-  "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-  "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-  "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-  "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-  "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-  "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
-  "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
-  "Julie : Laisse un post-it positif sur un écran 📝",
-  "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
-  "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-  "Loïc : Bienvenue à l’école des métiers 🎉",
-  "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-  "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-  "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-  "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-  "Nicole : 😄",
-  "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
-  "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-  "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-  "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-  "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-  "Yveline : Tes petits doigts de fée font des merveilles 😌",
-  "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
+
+ "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
+
+ "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
+
+ "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
+
+ "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
+
+ "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
+
+ "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
+
+ "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
+
+ "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
+
+ "Julie : Laisse un post-it positif sur un écran 📝",
+
+ "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
+
+ "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
+
+ "Loïc : Bienvenue à l’école des métiers 🎉",
+
+ "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
+
+ "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
+
+ "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
+
+ "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
+
+ "Nicole : 😄",
+
+ "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
+
+ "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
+
+ "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
+
+ "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
+
+ "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
+
+ "Yveline : Tes petits doigts de fée font des merveilles 😌",
+
+ "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
+
 ];
 
-// ---------------------------
-// 2) CONSTRUCTION DES CASES
-// ---------------------------
-const calendar = document.getElementById("calendar");
-const today = new Date();
-const currentDay = today.getMonth() === 11 ? today.getDate() : 0; // Débloque seulement en décembre
 
-for (let i = 1; i <= 24; i++) {
-    const dayDiv = document.createElement("div");
-    dayDiv.classList.add("day");
-    dayDiv.textContent = messages[i - 1].split(":")[0]; // afficher prénom
 
-    // Verrouillage si la date est future
-    if (i > currentDay) {
-        dayDiv.classList.add("locked");
-    }
 
-    // Déjà ouvert → reste cliquable et vert
-    if (localStorage.getItem("opened_" + i)) {
-        dayDiv.classList.add("opened");
-    }
+const calendar = document.querySelector(".calendar");
 
-    // Clic
-    dayDiv.addEventListener("click", () => {
-        if (dayDiv.classList.contains("locked")) return;
 
-        document.getElementById("messageText").textContent = messages[i - 1];
-        document.getElementById("messageBox").style.display = "block";
 
-        dayDiv.classList.add("opened");
-        localStorage.setItem("opened_" + i, "true");
-    });
 
-    calendar.appendChild(dayDiv);
+messages.forEach((msg, i) => {
+
+    let box = document.createElement("div");
+
+    box.className = "day";
+
+    box.innerText = (i+1) + " — " + msg.split(" : ")[0];
+
+    box.onclick = () => openModal(msg);
+
+    calendar.appendChild(box);
+
+});
+
+
+
+
+function openModal(text) {
+
+    document.getElementById("modalText").textContent = text;
+
+    document.getElementById("modal").style.display = "flex";
+
 }
 
-// fermeture message
-document.getElementById("closeBtn").onclick = () => {
-    document.getElementById("messageBox").style.display = "none";
-};
+
+
+
+function closeModal() {
+
+    document.getElementById("modal").style.display = "none";
+
+}
+
 </script>
 
+
+
+
 </body>
+
 </html>
-
-
-
-
-   
-    
 
 
