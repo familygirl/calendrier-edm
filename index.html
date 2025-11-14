@@ -1,267 +1,174 @@
 <!DOCTYPE html>
-
 <html lang="fr">
-
 <head>
-
 <meta charset="UTF-8">
-
 <title>Calendrier de l'Avent – TEST</title>
-
 <style>
-
     body {
-
         font-family: Arial, sans-serif;
-
         background: #f7f2e8;
-
         text-align: center;
-
         margin: 0;
-
         padding: 20px;
-
     }
+    h1 { margin-bottom: 5px; }
 
-    h1 { margin-bottom: 20px; }
-
-
-
+    #countdown {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
 
     .calendar {
-
         display: grid;
-
         grid-template-columns: repeat(6, 1fr);
-
         gap: 10px;
-
         max-width: 900px;
-
         margin: auto;
-
     }
-
-
-
 
     .day {
-
         background: white;
-
         border: 2px solid #c79d63;
-
         padding: 20px;
-
         border-radius: 10px;
-
         cursor: pointer;
-
         font-weight: bold;
-
         display: flex;
-
         align-items: center;
-
         justify-content: center;
-
         height: 90px;
-
     }
-
-
-
 
     .modal {
-
         display: none;
-
         position: fixed;
-
         left: 0; top: 0;
-
         width: 100%; height: 100%;
-
         background: rgba(0,0,0,0.6);
-
         justify-content: center;
-
         align-items: center;
-
     }
-
-
-
 
     .modal-content {
-
         background: white;
-
         padding: 20px;
-
         border-radius: 12px;
-
         width: 80%;
-
         max-width: 400px;
-
         text-align: center;
-
         font-size: 18px;
-
     }
-
-
-
 
     .close {
-
         cursor: pointer;
-
         font-size: 20px;
-
         float: right;
-
     }
-
 </style>
-
 </head>
-
 <body>
 
-
-
-
 <h1>🎁 Calendrier de l'Avent – TEST 🎁</h1>
-
-
-
+<div id="countdown"></div>
 
 <div class="calendar"></div>
 
-
-
-
 <div id="modal" class="modal">
-
   <div class="modal-content">
-
     <span class="close" onclick="closeModal()">✖</span>
-
     <p id="modalText"></p>
-
   </div>
-
 </div>
 
-
-
-
 <script>
+// 🔔 DATE D'OUVERTURE OFFICIELLE
+const startDate = new Date("2025-12-01T00:00:00");
 
+// 🔔 Messages
 const messages = [
-
  "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
-
  "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-
  "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-
  "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-
  "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-
  "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-
  "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
-
  "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
-
  "Julie : Laisse un post-it positif sur un écran 📝",
-
  "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
-
  "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-
  "Loïc : Bienvenue à l’école des métiers 🎉",
-
  "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-
  "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-
  "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-
  "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-
  "Nicole : 😄",
-
  "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
-
  "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-
  "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-
  "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-
  "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-
  "Yveline : Tes petits doigts de fée font des merveilles 😌",
-
  "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-
 ];
-
-
-
 
 const calendar = document.querySelector(".calendar");
 
-
-
-
+// 🔔 Création des cases SANS tiret
 messages.forEach((msg, i) => {
-
     let box = document.createElement("div");
-
     box.className = "day";
-
-    box.innerText = (i+1) + " — " + msg.split(" : ")[0];
-
+    box.innerText = msg.split(" : ")[0]; // 👉 NOM SEUL
     box.onclick = () => openModal(msg);
-
     calendar.appendChild(box);
-
 });
 
-
-
-
+// 🔔 Modal
 function openModal(text) {
-
     document.getElementById("modalText").textContent = text;
-
     document.getElementById("modal").style.display = "flex";
-
 }
-
-
-
-
 function closeModal() {
-
     document.getElementById("modal").style.display = "none";
-
 }
 
+// 🔔 Compte à rebours
+function updateCountdown() {
+    const now = new Date();
+    const diff = startDate - now;
+
+    if (diff <= 0) {
+        document.getElementById("countdown").innerHTML = "🎄 Le calendrier est ouvert !";
+        return;
+    }
+
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff / (1000*60*60)) % 24);
+    const minutes = Math.floor((diff / (1000*60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("countdown").innerHTML =
+        `⏳ Le calendrier s’ouvre dans <b>${days} j ${hours} h ${minutes} m ${seconds} s</b>`;
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
 </script>
 
-
-
-
 </body>
-
 </html>
+
+
+    
+
+
+      
+
+        
+
+
+
+
+
 
 
