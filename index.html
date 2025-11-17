@@ -1,155 +1,173 @@
-M<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendrier de l’Avent 2025</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendrier de l'avent EDM 2025</title>
 
-<style>
+  <style>
     body {
-        font-family: "Trebuchet MS", Arial, sans-serif;
-        background: #fff8f0;
-        text-align: center;
-        margin: 0;
-        padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f7f3e9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
     }
 
     h1 {
-        margin-top: 30px;
-        font-size: 32px;
-        color: #8b0000;
+      margin-top: 20px;
+      font-size: 28px;
+      color: #8b0000;
+      font-weight: bold;
     }
 
     #countdown {
-        font-size: 20px;
-        margin-bottom: 25px;
-        color: #333;
-        font-weight: bold;
+      margin-top: 5px;
+      font-size: 20px;
+      color: #333;
+      font-weight: bold;
     }
 
-    #calendar {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 20px;
-        width: 85%;
-        margin: auto;
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 10px;
     }
 
     .day {
-        background: #e9e9e9;
-        padding: 22px;
-        border-radius: 12px;
-        font-size: 17px;
-        cursor: pointer;
-        border: 2px solid #c44;
-        transition: 0.2s;
+      background-color: #c62828;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+      text-align: center;
     }
 
-    .day:hover {
-        background: #fff4f4;
-        transform: scale(1.04);
+    .day.locked {
+      background-color: #888;
+      cursor: not-allowed;
+      opacity: 0.7;
     }
-</style>
+
+    .day.opened {
+      background-color: #2e7d32;
+    }
+
+    #messageBox {
+      margin-top: 30px;
+      padding: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
+      font-size: 18px;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>🎄 Calendrier de l’Avent EDM 2025 🎄</h1>
-<div id="countdown">Chargement...</div>
+  <h1>Calendrier de l'avent EDM 2025</h1>
+  <div id="countdown"></div>
 
-<div id="calendar"></div>
+  <div class="calendar" id="calendar"></div>
 
-<script>
-// Date d'ouverture : 1er décembre 2025 à 00h00
-const startDate = new Date(2025, 11, 1, 0, 0, 0);
+  <div id="messageBox"></div>
 
-// Sélection du bloc du compte à rebours
-const countdownElement = document.getElementById("countdown");
+  <script>
+    const messages = [
+      "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
+      "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
+      "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
+      "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
+      "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
+      "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
+      "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
+      "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
+      "Julie : Laisse un post-it positif sur un écran 📝",
+      "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
+      "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
+      "Loïc : Bienvenue à l’école des métiers 🎉",
+      "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
+      "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
+      "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
+      "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
+      "Nicole : 😄",
+      "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
+      "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
+      "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
+      "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
+      "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
+      "Yveline : Tes petits doigts de fée font des merveilles 😌",
+      "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
+    ];
 
-// Fonction du compte à rebours
-function updateCountdown() {
-    const now = new Date();
-    const distance = startDate - now;
+    const calendar = document.getElementById("calendar");
+    const messageBox = document.getElementById("messageBox");
 
-    if (distance <= 0) {
-        countdownElement.textContent = "Le calendrier est ouvert 🎉";
-        return;
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const openYear = 2025;
+
+    for (let i = 1; i <= 24; i++) {
+      let dayBox = document.createElement("div");
+      dayBox.classList.add("day");
+      dayBox.textContent = i;
+
+      const openDate = new Date(`${openYear}-12-${String(i).padStart(2, "0")}T00:00:00`);
+
+      if (today < openDate) {
+        dayBox.classList.add("locked");
+      }
+
+      dayBox.addEventListener("click", () => {
+        if (dayBox.classList.contains("locked")) return;
+
+        dayBox.classList.add("opened");
+        messageBox.style.display = "block";
+        messageBox.textContent = messages[i - 1];
+      });
+
+      calendar.appendChild(dayBox);
     }
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    function updateCountdown() {
+      const target = new Date("2025-12-01T00:00:00");
+      const now = new Date();
+      const diff = target - now;
 
-    countdownElement.textContent =
-        `Le calendrier s’ouvrira dans ${days} jours, ${hours} h ${minutes} min ${seconds} s`;
-}
+      if (diff <= 0) {
+        document.getElementById("countdown").textContent = "";
+        return;
+      }
 
-// Mise à jour toutes les secondes
-setInterval(updateCountdown, 1000);
-updateCountdown();
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
+      document.getElementById("countdown").textContent =
+        `Ouverture du calendrier dans ${days}j ${hours}h ${minutes}m ${seconds}s`;
+    }
 
-// ---------------------------- //
-//     GESTION DES CASES        //
-// ---------------------------- //
-
-const messages = [
-    "Annie-Claude : Laisse ton énergie positive briller autour de toi 🌟",
-    "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-    "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-    "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-    "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-    "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-    "Fatima : Aujourd’hui, je te souhaite un sourire qui dure toute la journée 😊",
-    "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un 😄",
-    "Julie : Laisse un post-it positif sur un écran 📝",
-    "Karima : Tu es une belle source d’énergie dans l’équipe ☀️",
-    "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-    "Loïc : Bienvenue à l’école des métiers 🎉",
-    "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-    "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-    "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-    "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-    "Nicole : 😄",
-    "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
-    "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-    "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-    "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-    "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-    "Yveline : Tes petits doigts de fée font des merveilles 😌",
-    "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-];
-
-const calendar = document.getElementById("calendar");
-
-messages.forEach((msg, index) => {
-    const div = document.createElement("div");
-    div.classList.add("day");
-    div.textContent = `${index + 1} — ${msg.split(":")[0]}`;
-
-    div.addEventListener("click", () => {
-        const today = new Date();
-        const day = index + 1;
-        const currentDay = today.getDate();
-        const currentMonth = today.getMonth();
-
-        if (today < startDate) {
-            alert("Le calendrier ne s’ouvre qu’à partir du 1er décembre 🎄");
-        } 
-        else if (currentMonth === 11 && currentDay >= day) {
-            alert(msg);
-        } 
-        else {
-            alert(`Patience, cette case s’ouvrira le ${day} décembre 🎁`);
-        }
-    });
-
-    calendar.appendChild(div);
-});
-</script>
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+    
+  </script>
 
 </body>
 </html>
-
 
