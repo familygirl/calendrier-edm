@@ -1,161 +1,145 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Calendrier de l'Avent EDM 2025</title>
-
+<meta charset="UTF-8">
+<title>Calendrier de l’avent EDM 2025</title>
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f5f2e9;
-        text-align: center;
+        background: #f4f4f4;
         margin: 0;
-        padding: 0;
+        padding: 20px;
+        text-align: center;
     }
-
-    h1 {
-        margin-top: 40px;
-        font-size: 32px;
-        color: #4a2f00;
-    }
-
-    #countdown {
-        font-size: 20px;
-        margin-bottom: 25px;
-        color: #6b4d1e;
-        font-weight: bold;
-    }
+    h1 { margin-bottom: 20px; }
 
     .calendar {
         display: grid;
-        grid-template-columns: repeat(6, 140px);
-        gap: 15px;
-        justify-content: center;
-        padding-bottom: 50px;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+        max-width: 900px;
+        margin: auto;
     }
 
     .day {
-        padding: 25px 10px;
-        border-radius: 12px;
+        padding: 18px;
+        background: #d6e4ff;
+        border-radius: 10px;
         cursor: pointer;
-        font-size: 18px;
-        background: #ffffff;
-        border: 2px solid #d4c7ac;
-        transition: 0.2s;
+        font-weight: bold;
+        transition: transform 0.2s;
+        min-height: 75px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .locked {
-        background: #ece2c4;
+        background: #cccccc;
         cursor: not-allowed;
         opacity: 0.6;
     }
 
-    .day:hover:not(.locked) {
-        background: #fff7d6;
-        transform: scale(1.05);
+    .opened {
+        background: #fff6d1;
+        border: 2px solid #e0b600;
     }
 
-    /* Popup */
-    .popup-bg {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.55);
-        display: none;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .popup {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        width: 85%;
-        max-width: 450px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    }
-
-    .close-btn {
+    .message {
         margin-top: 20px;
-        padding: 10px 25px;
-        background: #caa656;
-        border: none;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        display: none;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
     }
-
 </style>
 </head>
-
 <body>
 
-<h1>🎄 Calendrier de l'Avent EDM 2025 🎄</h1>
-<div id="countdown"></div>
+<h1>Calendrier de l’avent EDM 2025</h1>
 
-<div class="calendar" id="calendar"></div>
-
-<!-- Popup -->
-<div class="popup-bg" id="popup-bg">
-    <div class="popup">
-        <p id="popup-text"></p>
-        <button class="close-btn" onclick="closePopup()">Fermer</button>
-    </div>
-</div>
+<div id="calendar" class="calendar"></div>
+<div id="messageBox" class="message"></div>
 
 <script>
-    const names = [
-        "Anne-Laure",
-        "Brigitte",
-        "Denise",
-        "Élise",
-        "Emmanuelle",
-        "Fatima",
-        "Guillemette",
-        "Julie",
-        "Karima",
-        "Laure",
-        "Loïc",
-        "Marc",
-        "Michelle",
-        "Murielle",
-        "Nathalie",
-        "Nicole",
-        "Pascale",
-        "Roxane",
-        "Sidonie",
-        "Sylvie",
-        "Valérie",
-        "Yveline",
-        "Annie-Claude",
-        "Un dernier mot"
-    ];
+const days = [
+    { name: "Anne-Laure",   message: "Envoie un message positif sur le Teams de l’équipe 💌" },
+    { name: "Brigitte",     message: "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓" },
+    { name: "Denise",       message: "Pause bien-être – étire-toi, respire, profite du moment 🌸" },
+    { name: "Élise",        message: "Tu inspires confiance par ton attitude posée et professionnelle 🤝" },
+    { name: "Emmanuelle",   message: "Ton expertise est précieuse et ta collaboration également 💼" },
+    { name: "Fatima",       message: "Fais-nous part d’un moment apprécié avec l’équipe cette année 😊" },
+    { name: "Guillemette",  message: "Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄" },
+    { name: "Laure",        message: "Nous te remercions sincèrement pour ta collaboration 🤗" },
+    { name: "Karima",       message: "Partage avec nous l’une de tes passions ☀️" },
+    { name: "Julie",        message: "Aujourd'hui, raconte ton plus beau souvenir vécu à Legendre ✨" },
+    { name: "Loïc",         message: "Bienvenue à l’école des métiers ! De nouveaux défis nous attendent ensemble 🎉" },
+    { name: "Marc",         message: "Ton sens de l’analyse est un vrai atout pour notre équipe 🔍" },
+    { name: "Michelle",     message: "Tu fais preuve d’une belle curiosité intellectuelle 📚" },
+    { name: "Murielle",     message: "Toujours prête à aider tes collègues 💪 Merci !" },
+    { name: "Nathalie",     message: "Merci pour ta bienveillance et ton attention aux autres 💖" },
+    { name: "Nicole",       message: "😄" },
+    { name: "Pascale",      message: "Gardez le sourire, le meilleur reste à venir ☺️" },
+    { name: "Roxane",       message: "Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺" },
+    { name: "Sidonie",      message: "Tes efforts d’aujourd’hui sont les réussites de demain 🚀" },
+    { name: "Sylvie",       message: "Merci pour l’énergie et le bien-être que tu transmets 🌞" },
+    { name: "Valérie",      message: "Ta capacité à résoudre des problèmes complexes est admirable 🧠" },
+    { name: "Yveline",      message: "Tes petits doigts de fée font des merveilles 😌" },
+    { name: "Annie-Claude", message: "Merci pour toute l’énergie positive que tu fais briller autour de toi 🌟" },
+    { name: "Un dernier mot", message: "Que cette fin d’année soit remplie de sourires et de chaleur ✨" }
+];
 
-    const messages = [
-        "Envoie un message positif sur le Teams de l’équipe 💌",
-        "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-        "Pause bien-être – étire-toi, respire, profite du moment 🌸",
-        "Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-        "Ton expertise est précieuse et ta collaboration également 💼",
-        "Fais-nous part d’un moment que tu as apprécié partager avec l’équipe cette année 😊",
-        "Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄",
-        "Aujourd'hui, se déroule un évènement spécial, au cours du repas, raconte-nous ton plus beau souvenir vécu à Legendre",
-        "Partage avec nous l’une de tes passions.",
-        "Nous te remercions sincèrement pour ta collaboration 🤗",
-        "Bienvenue à l’école des métiers ! Nous avons hâte de travailler avec toi 🎉",
-        "Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-        "Tu fais preuve d’une belle curiosité intellectuelle 📚",
-        "Tu es toujours prête à donner un coup de main à tes collègues 💪",
-        "Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-        "😄",
-        "Gardez le sourire, le meilleur reste à venir ☺️",
-        "Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-        "Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-        "Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-        "Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-        "Tes petits doigts de fée font des merveilles 😌",
-        "Merci pour toute l’énergie positive que tu fais briller autour de toi 🌟",
-        "Que cette fin d’année soit remplie de
+const today = new Date();
+// ⚠️ Pour tester, décommente la ligne ci-dessous et remplace la date :
+// const today = new Date("2025-12-01");
 
+function createCalendar() {
+    const calendar = document.getElementById("calendar");
+
+    days.forEach((day, index) => {
+        const dayNum = index + 1;
+        const box = document.createElement("div");
+        box.className = "day";
+
+        const openDate = new Date(`2025-12-${String(dayNum).padStart(2, "0")}T00:00:00`);
+
+        if (today < openDate) {
+            box.classList.add("locked");
+        }
+
+        box.textContent = day.name;
+
+        box.addEventListener("click", () => {
+            if (box.classList.contains("locked")) return;
+
+            box.classList.add("opened");
+            showMessage(day.name, day.message);
+        });
+
+        calendar.appendChild(box);
+    });
+}
+
+function showMessage(name, message) {
+    const box = document.getElementById("messageBox");
+    box.style.display = "block";
+    box.innerHTML = `<h2>${name}</h2><p>${message}</p>`;
+}
+
+createCalendar();
+</script>
+
+</body>
+</html>
+
+
+
+
+     
+
+
+ 
 
