@@ -2,171 +2,158 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Calendrier de l’Avent EDM 2025</title>
+<title>Calendrier de l'Avent EDM 2025</title>
 <style>
     body {
-        background: #f5f5f5;
         font-family: Arial, sans-serif;
+        background: #f4f8ff;
         text-align: center;
         padding: 20px;
     }
 
     h1 {
-        font-size: 32px;
-        margin-bottom: 10px;
+        color: #003366;
+        margin-bottom: 20px;
     }
 
-    #countdown {
-        font-size: 20px;
-        margin-bottom: 25px;
-        font-weight: bold;
-    }
-
-    .calendar {
+    .grid {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
         gap: 12px;
         max-width: 900px;
-        margin: auto;
+        margin: 0 auto;
     }
 
-    .case {
-        background: #d60000;
-        color: white;
-        padding: 18px 5px;
-        border-radius: 8px;
-        cursor: pointer;
+    .door {
+        padding: 18px;
+        border-radius: 12px;
         font-weight: bold;
-        min-height: 70px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
+        font-size: 15px;
+        cursor: pointer;
+        border: 2px solid #003366;
         transition: 0.3s;
-        font-size: 14px;
     }
 
+    /* ➤ FUTUR = gris/bleu pastel */
     .locked {
-        background: #8b8b8b;
+        background: #dbe7ff;
+        color: #003366;
         cursor: not-allowed;
-        opacity: 0.7;
+        opacity: 0.6;
     }
 
-    .open {
-        background: #00753a;
+    /* ➤ JOUR J = doré */
+    .today {
+        background: #ffe69a;
+        color: #6a4b00;
+        animation: pulse 1.5s infinite;
     }
 
-    #messageBox {
+    /* ➤ PASSÉ = vert pastel */
+    .unlocked {
+        background: #d4f6d4;
+        color: #003d00;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0px #ffdd66; }
+        50% { box-shadow: 0 0 15px #ffdd66; }
+        100% { box-shadow: 0 0 0px #ffdd66; }
+    }
+
+    .message-box {
         margin-top: 25px;
         padding: 20px;
-        background: white;
-        border-radius: 10px;
-        width: 70%;
+        background: #fffacd;
+        border: 2px solid #003366;
+        border-radius: 12px;
+        max-width: 700px;
         margin-left: auto;
         margin-right: auto;
-        font-size: 18px;
         display: none;
-        border: 2px solid #00753a;
     }
 </style>
 </head>
 <body>
 
-<h1>Calendrier de l’Avent EDM 2025</h1>
-<div id="countdown"></div>
+<h1>🎄 Calendrier de l'Avent EDM 2025 🎄</h1>
 
-<div class="calendar" id="calendar"></div>
+<div class="grid" id="calendar"></div>
 
-<div id="messageBox"></div>
+<div id="messageBox" class="message-box"></div>
 
 <script>
-// 📌 LISTE DES PRÉNOMS (dans ton ordre)
-const names = [
-  "Anne-Laure", "Brigitte", "Denise", "Élise", "Emmanuelle", "Fatima",
-  "Guillemette", "Laure", "Karima", "Julie", "Loïc", "Marc",
-  "Michelle", "Murielle", "Nathalie", "Nicole", "Pascale", "Roxane",
-  "Sidonie", "Sylvie", "Valérie", "Yveline", "Annie-Claude", "Un dernier mot"
+const doors = [
+"Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
+"Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
+"Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
+"Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
+"Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
+"Fatima : Fais-nous part d’un moment que tu as apprécié partager avec l’équipe cette année 😊",
+"Guillemette : Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄",
+"Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
+"Karima : Partage avec nous l’une de tes passions.",
+"Julie : Aujourd'hui, se déroule un évènement spécial : au cours du repas, raconte-nous ton plus beau souvenir vécu à Legendre.",
+"Loïc : Bienvenue à l’école des métiers, nous avons hâte de travailler ensemble 🎉",
+"Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
+"Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
+"Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
+"Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
+"Nicole : 😄",
+"Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
+"Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
+"Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
+"Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
+"Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
+"Yveline : Tes petits doigts de fée font des merveilles 😌",
+"Annie-Claude : Merci pour toute l’énergie positive que tu fais briller autour de toi 🌟",
+"Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
 ];
 
-// 📌 LISTE DES MESSAGES (même ordre que les prénoms)
-const messages = [
-  "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-  "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-  "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-  "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-  "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-  "Fatima : Fais-nous part d’un moment que tu as apprécié partager avec l’équipe cette année 😊",
-  "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄",
-  "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-  "Karima : Partage avec nous l’une de tes passions.",
-  "Julie : Aujourd'hui, se déroule un évènement spécial. Pendant le repas, raconte-nous ton plus beau souvenir vécu à Legendre.",
-  "Loïc : Bienvenue à l’école des métiers, nous avons hâte de travailler avec toi et de relever ensemble de nouveaux défis 🎉",
-  "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-  "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-  "Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-  "Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-  "Nicole : 😄",
-  "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
-  "Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-  "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-  "Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-  "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-  "Yveline : Tes petits doigts de fée font des merveilles 😌",
-  "Annie-Claude : Merci pour toute l’énergie positive que tu fais briller autour de toi 🌟",
-  "Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-];
-
-// 📅 Date d'ouverture
-const startDate = new Date("2025-12-01");
-
-// 📌 Génération des cases
-const calendar = document.getElementById("calendar");
 const today = new Date();
+const year = 2025;
+const month = 11; // Décembre = 11
+const calendar = document.getElementById("calendar");
+const messageBox = document.getElementById("messageBox");
 
 for (let i = 0; i < 24; i++) {
-    const cell = document.createElement("div");
-    cell.classList.add("case");
-    cell.innerHTML = `<strong>${i+1}</strong><br>${names[i]}`;
+    const day = i + 1;
+    const doorDate = new Date(year, month, day);
+    const btn = document.createElement("div");
+    btn.classList.add("door");
+    btn.textContent = day;
 
-    const openDate = new Date(2025, 11, i+1);
-
-    if (today < openDate) {
-        cell.classList.add("locked");
+    if (today < doorDate) {
+        btn.classList.add("locked");
+    } else if (
+        today.getFullYear() === doorDate.getFullYear() &&
+        today.getMonth() === doorDate.getMonth() &&
+        today.getDate() === doorDate.getDate()
+    ) {
+        btn.classList.add("today");
+    } else {
+        btn.classList.add("unlocked");
     }
 
-    cell.addEventListener("click", function() {
-        if (today >= openDate) {
-            document.getElementById("messageBox").innerText = messages[i];
-            document.getElementById("messageBox").style.display = "block";
-            cell.classList.add("open");
-        }
+    btn.addEventListener("click", () => {
+        if (btn.classList.contains("locked")) return;
+
+        messageBox.style.display = "block";
+        messageBox.textContent = doors[i];
     });
 
-    calendar.appendChild(cell);
+    calendar.appendChild(btn);
 }
-
-// 🕒 Compte à rebours
-function updateCountdown() {
-    const now = new Date();
-    const diff = startDate - now;
-
-    if (diff <= 0) {
-        document.getElementById("countdown").innerHTML = "Le calendrier est ouvert 🎄";
-        return;
-    }
-
-    const days = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff / (1000*60*60)) % 24);
-    const minutes = Math.floor((diff / (1000*60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    document.getElementById("countdown").innerHTML =
-        `${days}j ${hours}h ${minutes}m ${seconds}s`;
-}
-
-setInterval(updateCountdown, 1000);
-updateCountdown();
 </script>
 
 </body>
 </html>
+
+    
+       
+      
+
+
+
+
+    
