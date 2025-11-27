@@ -6,154 +6,154 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f4f8ff;
         text-align: center;
+        background: #fffaf0;
+        margin: 0;
         padding: 20px;
     }
 
     h1 {
-        color: #003366;
-        margin-bottom: 20px;
+        margin-top: 10px;
+        font-size: 28px;
     }
 
     .grid {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(6, 110px);
         gap: 12px;
-        max-width: 900px;
-        margin: 0 auto;
+        justify-content: center;
+        margin-top: 30px;
     }
 
-    .door {
-        padding: 18px;
-        border-radius: 12px;
-        font-weight: bold;
-        font-size: 15px;
+    .day {
+        background: #F5E8C8;        /* beige doré pastel */
+        border: 2px solid #e6d8b5;
+        border-radius: 12px;        /* coins légèrement arrondis */
+        padding: 25px 0;
         cursor: pointer;
-        border: 2px solid #003366;
-        transition: 0.3s;
+        font-size: 20px;
+        font-weight: bold;
+        transition: transform 0.15s ease, background 0.3s;
     }
 
-    /* ➤ FUTUR = gris/bleu pastel */
-    .locked {
-        background: #dbe7ff;
-        color: #003366;
-        cursor: not-allowed;
-        opacity: 0.6;
+    .day:hover {
+        transform: scale(1.07);
+        background: #f2e2b8;
     }
 
-    /* ➤ JOUR J = doré */
-    .today {
-        background: #ffe69a;
-        color: #6a4b00;
-        animation: pulse 1.5s infinite;
+    .opened {
+        background: #fff;
+        color: #444;
+        border-color: #d9c89b;
     }
 
-    /* ➤ PASSÉ = vert pastel */
-    .unlocked {
-        background: #d4f6d4;
-        color: #003d00;
-    }
-
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0px #ffdd66; }
-        50% { box-shadow: 0 0 15px #ffdd66; }
-        100% { box-shadow: 0 0 0px #ffdd66; }
-    }
-
-    .message-box {
-        margin-top: 25px;
-        padding: 20px;
-        background: #fffacd;
-        border: 2px solid #003366;
+    #popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
         border-radius: 12px;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
+        border: 2px solid #e6d8b5;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
         display: none;
+        width: 300px;
     }
+
+    #close {
+        margin-top: 15px;
+        cursor: pointer;
+        background: #F5E8C8;
+        border: 2px solid #e6d8b5;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
 </style>
 </head>
+
 <body>
 
 <h1>🎄 Calendrier de l'Avent EDM 2025 🎄</h1>
 
 <div class="grid" id="calendar"></div>
 
-<div id="messageBox" class="message-box"></div>
+<div id="popup">
+    <div id="message"></div>
+    <button id="close">Fermer</button>
+</div>
 
 <script>
-const doors = [
-"Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
-"Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-"Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
-"Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-"Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
-"Fatima : Fais-nous part d’un moment que tu as apprécié partager avec l’équipe cette année 😊",
-"Guillemette : Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄",
-"Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
-"Karima : Partage avec nous l’une de tes passions.",
-"Julie : Aujourd'hui, se déroule un évènement spécial : au cours du repas, raconte-nous ton plus beau souvenir vécu à Legendre.",
-"Loïc : Bienvenue à l’école des métiers, nous avons hâte de travailler ensemble 🎉",
-"Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-"Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
-"Murielle : Tu es toujours prête à donner un coup de main à tes collègues 💪",
-"Nathalie : Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-"Nicole : 😄",
-"Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
-"Roxane : Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-"Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-"Sylvie : Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-"Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-"Yveline : Tes petits doigts de fée font des merveilles 😌",
-"Annie-Claude : Merci pour toute l’énergie positive que tu fais briller autour de toi 🌟",
-"Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
-];
+// 🔔 ORDER EXACT + MESSAGES VALIDÉS
+const messages = {
+ 1: "Anne-Laure : Envoie un message positif sur le Teams de l’équipe 💌",
+ 2: "Brigitte : Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
+ 3: "Denise : Pause bien-être – étire-toi, respire, profite du moment 🌸",
+ 4: "Élise : Tu inspires confiance par ton attitude posée et professionnelle 🤝",
+ 5: "Emmanuelle : Ton expertise est précieuse et ta collaboration également 💼",
+ 6: "Fatima : Fais nous part d’un moment que tu as apprécié partager avec l’équipe cette année 😊",
+ 7: "Guillemette : Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄",
+ 8: "Laure : Nous te remercions sincèrement pour ta collaboration 🤗",
+ 9: "Karima : Partage avec nous l’une de tes passions 🎨",
+ 10: "Julie : Aujourd'hui, raconte-nous ton plus beau souvenir vécu à Legendre ✨",
+ 11: "Loïc : Bienvenue à l’école des métiers, hâte de relever de nouveaux défis ensemble 🎉",
+ 12: "Marc : Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
+ 13: "Michelle : Tu fais preuve d’une belle curiosité intellectuelle 📚",
+ 14: "Murielle : Tu es toujours prête à aider tes collègues 💪",
+ 15: "Nathalie : Merci pour ta bienveillance et ton écoute 💖",
+ 16: "Nicole : 😄",
+ 17: "Pascale : Gardez le sourire, le meilleur reste à venir ☺️",
+ 18: "Roxane : Donne-nous 3 choses qui te rendent heureuse aujourd’hui 🌺",
+ 19: "Sidonie : Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
+ 20: "Sylvie : Merci pour l’énergie et le bien-être que tu transmets 🌞",
+ 21: "Valérie : Ta capacité à résoudre des problèmes complexes est admirable 🧠",
+ 22: "Yveline : Tes petits doigts de fée font des merveilles 😌",
+ 23: "Annie-Claude : Merci pour toute l’énergie positive que tu fais briller 🌟",
+ 24: "Un dernier mot : Que cette fin d’année soit remplie de sourires et de chaleur ✨"
+};
 
-const today = new Date();
-const year = 2025;
-const month = 11; // Décembre = 11
+// 🎁 Génération automatique des 24 cases
 const calendar = document.getElementById("calendar");
-const messageBox = document.getElementById("messageBox");
+const today = new Date();
+const currentDay = today.getDate();
 
-for (let i = 0; i < 24; i++) {
-    const day = i + 1;
-    const doorDate = new Date(year, month, day);
-    const btn = document.createElement("div");
-    btn.classList.add("door");
-    btn.textContent = day;
+for (let i = 1; i <= 24; i++) {
+    const div = document.createElement("div");
+    div.className = "day";
+    div.textContent = i;
 
-    if (today < doorDate) {
-        btn.classList.add("locked");
-    } else if (
-        today.getFullYear() === doorDate.getFullYear() &&
-        today.getMonth() === doorDate.getMonth() &&
-        today.getDate() === doorDate.getDate()
-    ) {
-        btn.classList.add("today");
-    } else {
-        btn.classList.add("unlocked");
+    if (i > currentDay) div.classList.add("locked");
+
+    div.onclick = () => openDay(i, div);
+
+    calendar.appendChild(div);
+}
+
+function openDay(number, element) {
+    const now = new Date();
+    const today = now.getDate();
+
+    if (number > today) {
+        alert("🎁 Cette case s’ouvrira le " + number + " décembre !");
+        return;
     }
 
-    btn.addEventListener("click", () => {
-        if (btn.classList.contains("locked")) return;
-
-        messageBox.style.display = "block";
-        messageBox.textContent = doors[i];
-    });
-
-    calendar.appendChild(btn);
+    element.classList.add("opened");
+    document.getElementById("message").textContent = messages[number];
+    document.getElementById("popup").style.display = "block";
 }
+
+document.getElementById("close").onclick = () =>
+    document.getElementById("popup").style.display = "none";
 </script>
 
 </body>
 </html>
 
-    
-       
-      
-
 
 
 
     
+
