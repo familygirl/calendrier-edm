@@ -3,63 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <title>Calendrier de l’avent EDM 2025</title>
+
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(180deg, #fff8ef, #ffe7c8);
         margin: 0;
         padding: 20px;
         text-align: center;
+        color: #3b2f2f;
     }
-    h1 { margin-bottom: 20px; }
+
+    h1 {
+        margin-bottom: 10px;
+        font-size: 32px;
+    }
+
+    #countdown {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 25px;
+        color: #8c3a00;
+    }
 
     .calendar {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        gap: 12px;
+        gap: 14px;
         max-width: 900px;
         margin: auto;
     }
 
     .day {
         padding: 18px;
-        background: #d6e4ff;
-        border-radius: 10px;
+        background: #ffffffc9;
+        border-radius: 12px;
         cursor: pointer;
         font-weight: bold;
-        transition: transform 0.2s;
-        min-height: 75px;
+        min-height: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: 0.25s;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    .day:hover {
+        transform: scale(1.05);
     }
 
     .locked {
-        background: #cccccc;
+        background: #d1d1d1;
         cursor: not-allowed;
-        opacity: 0.6;
+        opacity: 0.7;
+        box-shadow: none;
     }
 
     .opened {
-        background: #fff6d1;
-        border: 2px solid #e0b600;
+        background: #fff4c2;
+        border: 2px solid #e2b100;
+        transform: rotateY(180deg);
     }
 
     .message {
-        margin-top: 20px;
-        padding: 20px;
-        background: #fff;
-        border-radius: 10px;
-        display: none;
+        margin-top: 30px;
+        padding: 25px;
+        background: #fffdf7;
+        border-radius: 12px;
         max-width: 700px;
         margin-left: auto;
         margin-right: auto;
+        display: none;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 </style>
 </head>
+
 <body>
 
-<h1>Calendrier de l’avent EDM 2025</h1>
+<h1>🎄 Calendrier de l’avent EDM 2025 🎄</h1>
+<div id="countdown"></div>
 
 <div id="calendar" class="calendar"></div>
 <div id="messageBox" class="message"></div>
@@ -92,25 +116,38 @@ const days = [
     { name: "Un dernier mot", message: "Que cette fin d’année soit remplie de sourires et de chaleur ✨" }
 ];
 
-const today = new Date();
-// ⚠️ Pour tester, décommente la ligne ci-dessous et remplace la date :
-// const today = new Date("2025-12-01");
+// === COMPTE À REBOURS ===
+function updateCountdown() {
+    const now = new Date();
+    const first = new Date("2025-12-01");
 
+    const diff = first - now;
+
+    const countdown = document.getElementById("countdown");
+
+    if (diff > 0) {
+        const daysLeft = Math.ceil(diff / (1000*60*60*24));
+        countdown.textContent = `⏳ Plus que ${daysLeft} jour(s) avant le début du calendrier !`;
+    } else {
+        countdown.textContent = "🎁 Que la magie commence ! 🎁";
+    }
+}
+updateCountdown();
+
+// === GÉNÉRATION DES CASES ===
 function createCalendar() {
     const calendar = document.getElementById("calendar");
+    const today = new Date();
 
     days.forEach((day, index) => {
         const dayNum = index + 1;
+        const openDate = new Date(`2025-12-${String(dayNum).padStart(2,"0")}T00:00:00`);
+
         const box = document.createElement("div");
         box.className = "day";
-
-        const openDate = new Date(`2025-12-${String(dayNum).padStart(2, "0")}T00:00:00`);
-
-        if (today < openDate) {
-            box.classList.add("locked");
-        }
-
         box.textContent = day.name;
+
+        if (today < openDate) box.classList.add("locked");
 
         box.addEventListener("click", () => {
             if (box.classList.contains("locked")) return;
@@ -125,8 +162,8 @@ function createCalendar() {
 
 function showMessage(name, message) {
     const box = document.getElementById("messageBox");
-    box.style.display = "block";
     box.innerHTML = `<h2>${name}</h2><p>${message}</p>`;
+    box.style.display = "block";
 }
 
 createCalendar();
@@ -138,8 +175,10 @@ createCalendar();
 
 
 
-     
+
+   
 
 
- 
+
+
 
