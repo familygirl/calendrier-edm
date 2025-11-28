@@ -6,218 +6,178 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background: #faf7e6;
-        margin: 0;
-        padding: 0;
-    }
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ffecd2, #fcb69f);
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
 
-    h1 {
-        margin-top: 30px;
-        font-size: 28px;
-        color: #8b0000;
-    }
+/* COMPTE À REBOURS */
+#countdown {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #b30000;
+}
 
-    #countdown {
-        font-size: 18px;
-        margin-bottom: 25px;
-        color: #444;
-    }
+/* GRILLE */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 700px;
+  margin: auto;
+}
 
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 15px;
-        max-width: 900px;
-        margin: 0 auto;
-    }
+/* CASES */
+.day {
+  padding: 25px 8px;
+  background: #ff595e;
+  color: white;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
-    .case {
-        background: #fff8dc;
-        padding: 22px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: bold;
-        border: 3px solid gold; /* 🟨 Contour doré permanent */
-        transition: transform 0.2s ease;
-    }
+.day:hover {
+  transform: scale(1.06);
+  background: #ff2e35;
+}
 
-    .case.locked {
-        background: #f0e7c9;
-        cursor: not-allowed;
-        color: #999;
-    }
+.day.locked {
+  background: #cccccc;
+  cursor: not-allowed;
+  color: #666;
+}
 
-    .case.open {
-        background: #fff3b0;
-        border-color: #d4af37;
-    }
+.day.open {
+  background: #8ac926 !important;
+}
 
-    .message-box {
-        margin-top: 25px;
-        padding: 20px;
-        background: white;
-        border-radius: 10px;
-        width: 60%;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 18px;
-        border: 2px solid gold;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: 0.5s ease; /* ✨ Animation douce */
-    }
-
-    .message-box.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* MESSAGE */
+.message {
+  display: none;
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: normal;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  color: #444;
+}
 </style>
 </head>
-
 <body>
 
 <h1>🎄 Calendrier de l’Avent EDM 2025 🎄</h1>
+
 <div id="countdown"></div>
 
-<div class="grid" id="calendar"></div>
-
-<div id="message" class="message-box"></div>
+<div class="calendar" id="calendar"></div>
 
 <script>
-// ----------------------------
-// NOMS DANS L’ORDRE DÉFINITIF
-// ----------------------------
+/* --- LISTE DES NOMS --- */
 const names = [
-    "Anne-Laure",
-    "Brigitte",
-    "Denise",
-    "Élise",
-    "Emmanuelle",
-    "Fatima",
-    "Guillemette",
-    "Laure",
-    "Karima",
-    "Julie",
-    "Loïc",
-    "Marc",
-    "Michelle",
-    "Murielle",
-    "Nathalie",
-    "Nicole",
-    "Pascale",
-    "Roxane",
-    "Sidonie",
-    "Sylvie",
-    "Valérie",
-    "Yveline",
-    "Annie-Claude",
-    "Un dernier mot"
+  "Anne-Laure", "Brigitte", "Denise", "Élise", "Emmanuelle",
+  "Fatima", "Guillemette", "Laure", "Karima", "Julie",
+  "Loïc", "Marc", "Michelle", "Murielle", "Nathalie",
+  "Nicole", "Pascale", "Roxane", "Sidonie", "Sylvie",
+  "Valérie", "Yveline", "Annie-Claude", "Un dernier mot"
 ];
 
-// ----------------------------
-// MESSAGES ASSOCIÉS
-// ----------------------------
+/* --- LISTE DES MESSAGES --- */
 const messages = [
-"Envoie un message positif sur le Teams de l’équipe 💌",
-"Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
-"Pause bien-être – étire-toi, respire, profite du moment 🌸",
-"Tu inspires confiance par ton attitude posée et professionnelle 🤝",
-"Ton expertise est précieuse et ta collaboration également 💼",
-"Fais-nous part d’un moment que tu as apprécié partager avec l’équipe cette année 😊",
-"Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄",
-"Nous te remercions sincèrement pour ta collaboration 🤗",
-"Partage avec nous l’une de tes passions.",
-"Aujourd'hui, raconte nous ton plus beau souvenir vécu à Legendre ✨",
-"Bienvenue à l’école des métiers, nous avons hâte de travailler ensemble 🎉",
-"Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
-"Tu fais preuve d’une belle curiosité intellectuelle 📚",
-"Tu es toujours prête à donner un coup de main à tes collègues 💪",
-"Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
-"😄",
-"Gardez le sourire, le meilleur reste à venir ☺️",
-"Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
-"Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
-"Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
-"Ta capacité à résoudre des problèmes complexes est admirable 🧠",
-"Tes petits doigts de fée font des merveilles 😌",
-"Merci pour toute l’énergie positive que tu fais briller autour de toi 🌟",
-"Que cette fin d’année soit remplie de sourires et de chaleur ✨"
+  "Envoie un message positif sur le Teams de l’équipe 💌",
+  "Chapeau ! Pour la manière dont tu as abordé cette mission complexe qu’est le CPF 🎓",
+  "Pause bien-être – étire-toi, respire, profite du moment 🌸",
+  "Tu inspires confiance par ton attitude posée et professionnelle 🤝",
+  "Ton expertise est précieuse et ta collaboration également 💼",
+  "Fais-nous part d’un moment que tu as apprécié partager avec l’équipe cette année 😊",
+  "Ton super pouvoir du jour — faire rire quelqu’un de l’équipe 😄",
+  "Nous te remercions sincèrement pour ta collaboration 🤗",
+  "Partage avec nous l’une de tes passions (loisirs, projets, créativités…) ☀️",
+  "Aujourd'hui, se déroule un évènement spécial : au cours du repas, raconte-nous ton plus beau souvenir vécu à Legendre ✨",
+  "Bienvenue à l’école des métiers, nous avons hâte de travailler ensemble et de relever de nouveaux défis 🎉",
+  "Ton sens de l’analyse est un vrai atout pour notre équipe 🔍",
+  "Tu fais preuve d’une belle curiosité intellectuelle 📚",
+  "Toujours prête à donner un coup de main à tes collègues — merci pour ton soutien 💪",
+  "Tu es toujours attentive aux autres. Merci pour ta bienveillance 💖",
+  "😄",
+  "Gardez le sourire, le meilleur reste à venir ☺️",
+  "Dis-nous trois choses qui te rendent heureuse aujourd’hui 🌺",
+  "Tes efforts d’aujourd’hui sont les réussites de demain 🚀",
+  "Merci pour l’énergie et le bien-être que tu transmets aux agents 🌞",
+  "Ta capacité à résoudre des problèmes complexes est admirable 🧠",
+  "Tes petits doigts de fée font des merveilles 😌",
+  "Merci pour toute l’énergie positive que tu fais briller autour de toi 🌟",
+  "Que cette fin d’année soit remplie de sourires et de chaleur ✨"
 ];
 
+/* --- CRÉATION DU CALENDRIER --- */
 const calendar = document.getElementById("calendar");
-const messageBox = document.getElementById("message");
-
 const today = new Date();
+
+/* date d'ouverture */
 const year = 2025;
-const startDate = new Date(`${year}-12-01`);
-const endDate = new Date(`${year}-12-24`);
+const month = 11; // décembre INDEX = 11
+// donc 1 décembre = day 1 → JS = 0-based so day = 1
 
-// ----------------------------
-// COMPTE À REBOURS
-// ----------------------------
-function updateCountdown() {
-    const now = new Date();
-    const diff = startDate - now;
+for (let i = 0; i < 24; i++) {
+  const dayDate = new Date(year, month, i + 1); 
+  const isUnlocked = today >= dayDate;
 
-    const countdown = document.getElementById("countdown");
+  const box = document.createElement("div");
+  box.classList.add("day");
+  if (!isUnlocked) box.classList.add("locked");
+  box.dataset.index = i;
+  box.innerHTML = names[i];
 
-    if (diff <= 0) {
-        countdown.textContent = "🎁 Le calendrier est ouvert !";
-        return;
-    }
+  const msg = document.createElement("div");
+  msg.classList.add("message");
+  msg.innerHTML = messages[i];
 
-    const days = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff / (1000*60*60)) % 24);
-    const minutes = Math.floor((diff / (1000*60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
+  box.appendChild(msg);
 
-    countdown.textContent = 
-        `Ouverture du calendrier dans ${days} j ${hours} h ${minutes} min ${seconds} s`;
+  box.addEventListener("click", () => {
+    if (!isUnlocked) return;
+
+    msg.style.display =
+      msg.style.display === "block" ? "none" : "block";
+
+    box.classList.add("open");
+  });
+
+  calendar.appendChild(box);
 }
-setInterval(updateCountdown, 1000);
+
+/* --- COMPTE À REBOURS --- */
+const countdownEl = document.getElementById("countdown");
+const startDate = new Date(year, month, 1, 0, 0, 0);
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = startDate - now;
+  if (diff <= 0) {
+    countdownEl.textContent = "🎉 C’est parti ! Ouvre la case du jour 🎉";
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const minutes = Math.floor((diff / (1000*60)) % 60);
+
+  countdownEl.textContent =
+    `⏳ Calendrier actif dans ${days}j ${hours}h ${minutes}min`;
+}
 updateCountdown();
-
-// ----------------------------
-// CONSTRUCTION DES CASES
-// ----------------------------
-names.forEach((name, index) => {
-    const day = index + 1;
-    const cell = document.createElement("div");
-    cell.className = "case";
-    cell.textContent = name;
-
-    const cellDate = new Date(`${year}-12-${String(day).padStart(2,'0')}`);
-
-    if (today < cellDate) {
-        cell.classList.add("locked");
-    } else {
-        cell.classList.add("open");
-    }
-
-    cell.addEventListener("click", () => {
-        if (today < cellDate) return;
-
-        messageBox.textContent = messages[index];
-        messageBox.classList.add("visible");
-    });
-
-    calendar.appendChild(cell);
-});
+setInterval(updateCountdown, 60000);
 </script>
 
 </body>
 </html>
 
-
-       
-        
-
-
-
-
-
-
-
+     
